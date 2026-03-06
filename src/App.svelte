@@ -179,49 +179,57 @@
         </div>
     </div>
 
-        <!-- Prompt Format Section (Existing) -->
-    <div class="flex flex-col gap-1">
-        <b>Prompt Format</b>
-        <textarea
-            class="text_pole w-full p-2 text-xs"
-            style="min-height: 80px; resize: vertical;"
-            value={chat.promptFormat}
-            onchange={(e) => updateChat('promptFormat', e.target.value)}
-        ></textarea>
-        <div class="text-[0.65rem] opacity-70 mt-1">
-            Available placeholders: <code>{`{{day}}`}</code>, <code>{`{{month}}`}</code>, <code>{`{{date}}`}</code>, <code>{`{{year}}`}</code>, <code>{`{{time}}`}</code>
-        </div>
-    </div>
-
-    <!-- NEW: Injection Settings -->
     <div class="flex flex-col gap-2 mt-2 p-2 bg-black/20 rounded border border-white/10">
         <b>Injection Settings</b>
 
         <label class="flex items-center gap-2 cursor-pointer">
-            <input type="radio" name="injPos" value={0} checked={chat.injectPosition === 0} onchange={() => updateChat('injectPosition', 0)} />
+            <input checked={chat.injectPosition === 0}
+                   name="injPos"
+                   onchange={() => updateChat('injectPosition', 0)}
+                   type="radio"
+                   value={0}/>
             Do not inject into prompt
         </label>
 
         <label class="flex items-center gap-2 cursor-pointer">
-            <input type="radio" name="injPos" value={1} checked={chat.injectPosition === 1} onchange={() => updateChat('injectPosition', 1)} />
+            <input checked={chat.injectPosition === 1}
+                   name="injPos"
+                   onchange={() => updateChat('injectPosition', 1)}
+                   type="radio"
+                   value={1}/>
             Before main prompt (Story String)
         </label>
 
         <label class="flex items-center gap-2 cursor-pointer">
-            <input type="radio" name="injPos" value={2} checked={chat.injectPosition === 2} onchange={() => updateChat('injectPosition', 2)} />
+            <input checked={chat.injectPosition === 2}
+                   name="injPos"
+                   onchange={() => updateChat('injectPosition', 2)}
+                   type="radio"
+                   value={2}/>
             After main prompt (In-Prompt)
         </label>
 
         <div class="flex flex-col gap-1">
             <label class="flex items-center gap-2 cursor-pointer">
-                <input type="radio" name="injPos" value={3} checked={chat.injectPosition === 3} onchange={() => updateChat('injectPosition', 3)} />
+                <input checked={chat.injectPosition === 3}
+                       name="injPos"
+                       onchange={() => updateChat('injectPosition', 3)}
+                       type="radio"
+                       value={3}/>
                 In chat at depth:
             </label>
             {#if chat.injectPosition === 3}
                 <div class="flex items-center gap-2 ml-6">
-                    <input type="number" class="text_pole w-16" min="0" max="99" value={chat.injectDepth} onchange={(e) => updateChat('injectDepth', Number(e.target.value))} />
+                    <input type="number"
+                           class="text_pole w-16"
+                           min="0"
+                           max="99"
+                           value={chat.injectDepth}
+                           onchange={(e) => updateChat('injectDepth', Number(e.target.value))}/>
                     <span>as</span>
-                    <select class="text_pole w-auto" value={chat.injectRole} onchange={(e) => updateChat('injectRole', Number(e.target.value))}>
+                    <select class="text_pole w-auto"
+                            value={chat.injectRole}
+                            onchange={(e) => updateChat('injectRole', Number(e.target.value))}>
                         <option value={0}>System</option>
                         <option value={1}>User</option>
                         <option value={2}>Assistant</option>
