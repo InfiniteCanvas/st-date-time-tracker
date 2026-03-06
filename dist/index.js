@@ -2285,7 +2285,7 @@ var ci = window.extension_prompt_types || {
 }, di = {
 	currentDateTime: new Date().toISOString(),
 	autoAdvanceMinutes: 0,
-	promptFormat: "[System Note - Current Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}. Do not generate timestamps or <time></time> tags in your responses. The system handles this automatically.]",
+	promptFormat: "[System Note - Current Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}. Do not generate timestamps or 'time' tags in your responses. The system handles this automatically.]",
 	injectPosition: 3,
 	injectDepth: 2,
 	injectRole: 0

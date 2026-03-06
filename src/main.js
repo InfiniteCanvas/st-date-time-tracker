@@ -28,7 +28,7 @@ const defaultGlobalSettings = {
 const defaultChatSettings = {
     currentDateTime: new Date().toISOString(),
     autoAdvanceMinutes: 0,
-    promptFormat: "[System Note - Current Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}. Do not generate timestamps or <time></time> tags in your responses. The system handles this automatically.]",
+    promptFormat: "[System Note - Current Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}. Do not generate timestamps or 'time' tags in your responses. The system handles this automatically.]",
     injectPosition: 3, // 0 = None, 1 = Before Main, 2 = In Prompt, 3 = In Chat
     injectDepth: 2,
     injectRole: 0      // 0 = System, 1 = User, 2 = Assistant
