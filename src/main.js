@@ -28,10 +28,11 @@ const defaultGlobalSettings = {
 const defaultChatSettings = {
     currentDateTime: new Date().toISOString(),
     autoAdvanceMinutes: 0,
-    promptFormat: "[System Note - Current Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}. Do not generate timestamps or 'time' tags in your responses. The system handles this automatically.]",
-    injectPosition: 3, // 0 = None, 1 = Before Main, 2 = In Prompt, 3 = In Chat
+    injectFormat: "[System Note - Current Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}. Do not generate timestamps or time tags in your responses. The system handles this automatically.]",
+    appendFormat: "[Current Date and Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}]", // Will be wrapped in <time>
+    injectPosition: 3,
     injectDepth: 2,
-    injectRole: 0      // 0 = System, 1 = User, 2 = Assistant
+    injectRole: 0
 };
 
 // Initialize our extension's slice of the global settings
@@ -58,6 +59,14 @@ function loadChatSettings() {
     const metadata = window.SillyTavern.getContext().chatMetadata;
     if (metadata && metadata[MODULE_NAME]) {
         extState.chat = { ...defaultChatSettings, ...metadata[MODULE_NAME] };
+
+        // Migration: If old chat has 'promptFormat', split it into the two new fields
+        if (extState.chat.promptFormat) {
+            extState.chat.injectFormat = extState.chat.promptFormat;
+            extState.chat.appendFormat = defaultChatSettings.appendFormat;
+            delete extState.chat.promptFormat;
+            extState.saveChat();
+        }
     } else {
         extState.chat = { ...defaultChatSettings };
     }
@@ -65,11 +74,12 @@ function loadChatSettings() {
     window.dispatchEvent(new CustomEvent('st-dt-chat-loaded'));
 }
 
-function getFormattedTime() {
+function getFormattedString(template) {
+    if (!template) return "";
     const dt = new Date(extState.chat.currentDateTime);
     if (isNaN(dt.getTime())) return "";
 
-    let result = extState.chat.promptFormat;
+    let result = template;
     const replacers = {
         "{{day}}": dt.toLocaleDateString('en-US', { weekday: 'long' }),
         "{{date}}": dt.getDate().toString(),
@@ -93,7 +103,7 @@ function refreshPrompt() {
         return;
     }
 
-    const content = getFormattedTime();
+    const content = getFormattedString(extState.chat.injectFormat);
 
     // 2. Map the UI position number to SillyTavern's actual enum types
     let type = extension_prompt_types.NONE;
@@ -167,9 +177,12 @@ window.jQuery(async ($) => {
             // STRIP out any hallucinated <time> tags the AI tried to generate itself
             lastMsg.mes = lastMsg.mes.replace(/<time>[\s\S]*?<\/time>/gi, '').trim();
 
-            // Append the actual system-controlled time tag
-            lastMsg.mes += `\n<time>${getFormattedTime()}</time>`;
-            window.SillyTavern.getContext().saveChat();
+            // Generate the append string and add it wrapped in the HTML tag
+            const appendStr = getFormattedString(extState.chat.appendFormat);
+            if (appendStr) {
+                lastMsg.mes += `\n<time>${appendStr}</time>`;
+                window.SillyTavern.getContext().saveChat();
+            }
         }
     });
 

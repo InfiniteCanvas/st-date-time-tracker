@@ -165,19 +165,31 @@
                value={chat.autoAdvanceMinutes}/>
     </div>
 
+    <hr class="my-2 border-white/20" />
+
     <div class="flex flex-col gap-1">
-        <b>Prompt Format</b>
+        <b>Injection String Format</b>
         <textarea
-                class="text_pole w-full p-2 text-xs"
-                onchange={(e) => updateChat('promptFormat', e.target.value)}
-                style="min-height: 80px; resize: vertical;"
-                value={chat.promptFormat}
+            class="text_pole w-full p-2 text-xs"
+            style="min-height: 60px; resize: vertical;"
+            value={chat.injectFormat}
+            onchange={(e) => updateChat('injectFormat', e.target.value)}
+        ></textarea>
+    </div>
+
+    <div class="flex flex-col gap-1 mt-2">
+        <b>Appended String Format (Wrapped in &lt;time&gt;)</b>
+        <textarea
+            class="text_pole w-full p-2 text-xs"
+            style="min-height: 40px; resize: vertical;"
+            value={chat.appendFormat}
+            onchange={(e) => updateChat('appendFormat', e.target.value)}
         ></textarea>
         <div class="text-[0.65rem] opacity-70 mt-1">
-            Available placeholders: <code>{`{{day}}`}</code>, <code>{`{{month}}`}</code>, <code>{`{{date}}`}</code>,
-            <code>{`{{year}}`}</code>, <code>{`{{time}}`}</code>
+            Available placeholders: <code>{`{{day}}`}</code>, <code>{`{{month}}`}</code>, <code>{`{{date}}`}</code>, <code>{`{{year}}`}</code>, <code>{`{{time}}`}</code>
         </div>
     </div>
+
 
     <div class="flex flex-col gap-2 mt-2 p-2 bg-black/20 rounded border border-white/10">
         <b>Injection Settings</b>

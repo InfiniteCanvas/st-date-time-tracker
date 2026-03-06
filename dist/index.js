@@ -2028,7 +2028,7 @@ function Xr(e) {
 	});
 }
 typeof window < "u" && ((window.__svelte ??= {}).v ??= new Set()).add("5");
-var Zr = ar("<div class=\"flex items-center gap-2 ml-6\"><input type=\"number\" class=\"text_pole w-16\" min=\"0\" max=\"99\"/> <span>as</span> <select class=\"text_pole w-auto\"><option>System</option><option>User</option><option>Assistant</option></select></div>"), Qr = ar("<div class=\"flex justify-between items-center bg-black/20 p-2 rounded border border-white/10\"><span> </span> <div class=\"flex gap-1\"><button class=\"text-gray-400 hover:text-white px-2 py-1 bg-black/30 rounded cursor-pointer disabled:opacity-30\"><i class=\"fa-solid fa-arrow-up\"></i></button> <button class=\"text-gray-400 hover:text-white px-2 py-1 bg-black/30 rounded cursor-pointer disabled:opacity-30\"><i class=\"fa-solid fa-arrow-down\"></i></button> <button class=\"text-red-400 hover:text-red-300 px-2 py-1 bg-black/30 rounded cursor-pointer\"><i class=\"fa-solid fa-trash\"></i></button></div></div>"), $r = ar("<div class=\"flex justify-between items-center bg-black/20 p-2 rounded border border-white/10\"><span> </span> <div class=\"flex gap-1\"><button class=\"text-gray-400 hover:text-white px-2 py-1 bg-black/30 rounded cursor-pointer disabled:opacity-30\"><i class=\"fa-solid fa-arrow-up\"></i></button> <button class=\"text-gray-400 hover:text-white px-2 py-1 bg-black/30 rounded cursor-pointer disabled:opacity-30\"><i class=\"fa-solid fa-arrow-down\"></i></button> <button class=\"text-red-400 hover:text-red-300 px-2 py-1 bg-black/30 rounded cursor-pointer\"><i class=\"fa-solid fa-trash\"></i></button></div></div>"), ei = ar("<button class=\"menu_button m-0 text-xs py-1\"> </button>"), ti = ar("<div class=\"grid grid-cols-2 gap-1 mt-1\"></div> <hr class=\"border-white/20 my-1\"/>", 1), ni = ar("<div class=\"flex gap-1\"><button class=\"menu_button m-0 flex-1 text-xs py-1\"> </button> <button class=\"menu_button m-0 flex-1 text-xs py-1\"> </button></div>"), ri = ar("<div class=\"flex flex-col gap-1\"></div> <hr class=\"border-white/20 my-1\"/>", 1), ii = ar("<div class=\"fixed z-[9999] flex flex-col gap-2 p-3 min-w-[200px] rounded-lg shadow-lg text-white select-none\"><div class=\"flex flex-col gap-1 border-b border-white/20 pb-2 cursor-grab active:cursor-grabbing\"><div class=\"text-center font-bold text-sm pointer-events-none\">Date / Time</div> <input type=\"datetime-local\" class=\"text_pole text-xs w-full cursor-text\" style=\"background: rgba(0,0,0,0.3); border: none; text-align: center;\"/></div> <!> <!> <div class=\"flex items-center justify-between gap-2 text-xs\"><span>Auto-Advance (min/turn):</span> <input type=\"number\" class=\"text_pole text-xs p-1 cursor-text\" style=\"width: 50px; text-align: center; background: rgba(0,0,0,0.3); border: none;\" min=\"0\"/></div></div>"), ai = ar("<div class=\"flex flex-col gap-3 p-2 text-sm\"><label class=\"flex items-center gap-2 font-bold\"><input type=\"checkbox\"/> Enable Extension</label> <div class=\"flex flex-col gap-1\"><b>Current Date & Time (Saved per Chat)</b> <input class=\"text_pole w-full\" type=\"datetime-local\"/></div> <div class=\"flex flex-col gap-1\"><b>Auto-Advance (Minutes per turn)</b> <input class=\"text_pole w-24\" type=\"number\"/></div> <div class=\"flex flex-col gap-1\"><b>Prompt Format</b> <textarea class=\"text_pole w-full p-2 text-xs\" style=\"min-height: 80px; resize: vertical;\"></textarea> <div class=\"text-[0.65rem] opacity-70 mt-1\">Available placeholders: <code></code>, <code></code>, <code></code>, <code></code>, <code></code></div></div> <div class=\"flex flex-col gap-2 mt-2 p-2 bg-black/20 rounded border border-white/10\"><b>Injection Settings</b> <label class=\"flex items-center gap-2 cursor-pointer\"><input name=\"injPos\" type=\"radio\"/> Do not inject into prompt</label> <label class=\"flex items-center gap-2 cursor-pointer\"><input name=\"injPos\" type=\"radio\"/> Before main prompt (Story String)</label> <label class=\"flex items-center gap-2 cursor-pointer\"><input name=\"injPos\" type=\"radio\"/> After main prompt (In-Prompt)</label> <div class=\"flex flex-col gap-1\"><label class=\"flex items-center gap-2 cursor-pointer\"><input name=\"injPos\" type=\"radio\"/> In chat at depth:</label> <!></div></div> <hr class=\"my-2 border-white/20\"/> <div class=\"flex flex-col gap-1\"><b>Global Custom Time Buttons</b> <div class=\"flex gap-2 mb-2 w-full\"><input class=\"text_pole\" placeholder=\"Label (e.g., Midnight)\" style=\"flex: 1 1 auto; min-width: 0;\" type=\"text\"/> <input class=\"text_pole\" max=\"23\" min=\"0\" placeholder=\"Hr\" style=\"width: 70px; flex: 0 0 auto;\" type=\"number\"/> <button class=\"menu_button m-0\" style=\"flex: 0 0 auto;\">Add</button></div> <div class=\"flex flex-col gap-1\"></div></div> <hr class=\"my-2 border-white/20\"/> <div class=\"flex flex-col gap-1\"><b>Global Custom Adjust Buttons</b> <div class=\"flex gap-2 mb-2 w-full\"><input class=\"text_pole\" min=\"1\" style=\"flex: 1 1 auto; min-width: 0;\" type=\"number\"/> <select class=\"text_pole\" style=\"width: 75px; flex: 0 0 auto;\"><option>mins</option><option>hrs</option><option>days</option></select> <button class=\"menu_button m-0\" style=\"flex: 0 0 auto;\">Add</button></div> <div class=\"flex flex-col gap-1\"></div></div></div> <!>", 1);
+var Zr = ar("<div class=\"flex items-center gap-2 ml-6\"><input type=\"number\" class=\"text_pole w-16\" min=\"0\" max=\"99\"/> <span>as</span> <select class=\"text_pole w-auto\"><option>System</option><option>User</option><option>Assistant</option></select></div>"), Qr = ar("<div class=\"flex justify-between items-center bg-black/20 p-2 rounded border border-white/10\"><span> </span> <div class=\"flex gap-1\"><button class=\"text-gray-400 hover:text-white px-2 py-1 bg-black/30 rounded cursor-pointer disabled:opacity-30\"><i class=\"fa-solid fa-arrow-up\"></i></button> <button class=\"text-gray-400 hover:text-white px-2 py-1 bg-black/30 rounded cursor-pointer disabled:opacity-30\"><i class=\"fa-solid fa-arrow-down\"></i></button> <button class=\"text-red-400 hover:text-red-300 px-2 py-1 bg-black/30 rounded cursor-pointer\"><i class=\"fa-solid fa-trash\"></i></button></div></div>"), $r = ar("<div class=\"flex justify-between items-center bg-black/20 p-2 rounded border border-white/10\"><span> </span> <div class=\"flex gap-1\"><button class=\"text-gray-400 hover:text-white px-2 py-1 bg-black/30 rounded cursor-pointer disabled:opacity-30\"><i class=\"fa-solid fa-arrow-up\"></i></button> <button class=\"text-gray-400 hover:text-white px-2 py-1 bg-black/30 rounded cursor-pointer disabled:opacity-30\"><i class=\"fa-solid fa-arrow-down\"></i></button> <button class=\"text-red-400 hover:text-red-300 px-2 py-1 bg-black/30 rounded cursor-pointer\"><i class=\"fa-solid fa-trash\"></i></button></div></div>"), ei = ar("<button class=\"menu_button m-0 text-xs py-1\"> </button>"), ti = ar("<div class=\"grid grid-cols-2 gap-1 mt-1\"></div> <hr class=\"border-white/20 my-1\"/>", 1), ni = ar("<div class=\"flex gap-1\"><button class=\"menu_button m-0 flex-1 text-xs py-1\"> </button> <button class=\"menu_button m-0 flex-1 text-xs py-1\"> </button></div>"), ri = ar("<div class=\"flex flex-col gap-1\"></div> <hr class=\"border-white/20 my-1\"/>", 1), ii = ar("<div class=\"fixed z-[9999] flex flex-col gap-2 p-3 min-w-[200px] rounded-lg shadow-lg text-white select-none\"><div class=\"flex flex-col gap-1 border-b border-white/20 pb-2 cursor-grab active:cursor-grabbing\"><div class=\"text-center font-bold text-sm pointer-events-none\">Date / Time</div> <input type=\"datetime-local\" class=\"text_pole text-xs w-full cursor-text\" style=\"background: rgba(0,0,0,0.3); border: none; text-align: center;\"/></div> <!> <!> <div class=\"flex items-center justify-between gap-2 text-xs\"><span>Auto-Advance (min/turn):</span> <input type=\"number\" class=\"text_pole text-xs p-1 cursor-text\" style=\"width: 50px; text-align: center; background: rgba(0,0,0,0.3); border: none;\" min=\"0\"/></div></div>"), ai = ar("<div class=\"flex flex-col gap-3 p-2 text-sm\"><label class=\"flex items-center gap-2 font-bold\"><input type=\"checkbox\"/> Enable Extension</label> <div class=\"flex flex-col gap-1\"><b>Current Date & Time (Saved per Chat)</b> <input class=\"text_pole w-full\" type=\"datetime-local\"/></div> <div class=\"flex flex-col gap-1\"><b>Auto-Advance (Minutes per turn)</b> <input class=\"text_pole w-24\" type=\"number\"/></div> <hr class=\"my-2 border-white/20\"/> <div class=\"flex flex-col gap-1\"><b>Injection String Format</b> <textarea class=\"text_pole w-full p-2 text-xs\" style=\"min-height: 60px; resize: vertical;\"></textarea></div> <div class=\"flex flex-col gap-1 mt-2\"><b>Appended String Format (Wrapped in &lt;time&gt;)</b> <textarea class=\"text_pole w-full p-2 text-xs\" style=\"min-height: 40px; resize: vertical;\"></textarea> <div class=\"text-[0.65rem] opacity-70 mt-1\">Available placeholders: <code></code>, <code></code>, <code></code>, <code></code>, <code></code></div></div> <div class=\"flex flex-col gap-2 mt-2 p-2 bg-black/20 rounded border border-white/10\"><b>Injection Settings</b> <label class=\"flex items-center gap-2 cursor-pointer\"><input name=\"injPos\" type=\"radio\"/> Do not inject into prompt</label> <label class=\"flex items-center gap-2 cursor-pointer\"><input name=\"injPos\" type=\"radio\"/> Before main prompt (Story String)</label> <label class=\"flex items-center gap-2 cursor-pointer\"><input name=\"injPos\" type=\"radio\"/> After main prompt (In-Prompt)</label> <div class=\"flex flex-col gap-1\"><label class=\"flex items-center gap-2 cursor-pointer\"><input name=\"injPos\" type=\"radio\"/> In chat at depth:</label> <!></div></div> <hr class=\"my-2 border-white/20\"/> <div class=\"flex flex-col gap-1\"><b>Global Custom Time Buttons</b> <div class=\"flex gap-2 mb-2 w-full\"><input class=\"text_pole\" placeholder=\"Label (e.g., Midnight)\" style=\"flex: 1 1 auto; min-width: 0;\" type=\"text\"/> <input class=\"text_pole\" max=\"23\" min=\"0\" placeholder=\"Hr\" style=\"width: 70px; flex: 0 0 auto;\" type=\"number\"/> <button class=\"menu_button m-0\" style=\"flex: 0 0 auto;\">Add</button></div> <div class=\"flex flex-col gap-1\"></div></div> <hr class=\"my-2 border-white/20\"/> <div class=\"flex flex-col gap-1\"><b>Global Custom Adjust Buttons</b> <div class=\"flex gap-2 mb-2 w-full\"><input class=\"text_pole\" min=\"1\" style=\"flex: 1 1 auto; min-width: 0;\" type=\"number\"/> <select class=\"text_pole\" style=\"width: 75px; flex: 0 0 auto;\"><option>mins</option><option>hrs</option><option>days</option></select> <button class=\"menu_button m-0\" style=\"flex: 0 0 auto;\">Add</button></div> <div class=\"flex flex-col gap-1\"></div></div></div> <!>", 1);
 function oi(e, t) {
 	je(t, !0);
 	let n = Yr(t, "extState", 7);
@@ -2135,27 +2135,29 @@ function oi(e, t) {
 	Q(se), O(oe);
 	var ce = z(oe, 2), le = z(R(ce), 2);
 	Q(le), O(ce);
-	var ue = z(ce, 2), de = z(R(ue), 2);
-	qt(de);
-	var fe = z(de, 2), pe = z(R(fe));
-	pe.textContent = "{{day}}";
-	var me = z(pe, 2);
-	me.textContent = "{{month}}";
-	var he = z(me, 2);
-	he.textContent = "{{date}}";
+	var ue = z(ce, 4), de = z(R(ue), 2);
+	qt(de), O(ue);
+	var fe = z(ue, 2), pe = z(R(fe), 2);
+	qt(pe);
+	var me = z(pe, 2), he = z(R(me));
+	he.textContent = "{{day}}";
 	var ge = z(he, 2);
-	ge.textContent = "{{year}}";
+	ge.textContent = "{{month}}";
 	var _e = z(ge, 2);
-	_e.textContent = "{{time}}", O(fe), O(ue);
-	var ve = z(ue, 2), w = z(R(ve), 2), ye = R(w);
-	Q(ye), Rr(ye, 0), we(), O(w);
-	var be = z(w, 2), xe = R(be);
-	Q(xe), Rr(xe, 1), we(), O(be);
+	_e.textContent = "{{date}}";
+	var ve = z(_e, 2);
+	ve.textContent = "{{year}}";
+	var w = z(ve, 2);
+	w.textContent = "{{time}}", O(me), O(fe);
+	var ye = z(fe, 2), be = z(R(ye), 2), xe = R(be);
+	Q(xe), Rr(xe, 0), we(), O(be);
 	var T = z(be, 2), Se = R(T);
-	Q(Se), Rr(Se, 2), we(), O(T);
-	var E = z(T, 2), D = R(E), Ce = R(D);
-	Q(Ce), Rr(Ce, 3), we(), O(D);
-	var Te = z(D, 2), Ee = (e) => {
+	Q(Se), Rr(Se, 1), we(), O(T);
+	var E = z(T, 2), D = R(E);
+	Q(D), Rr(D, 2), we(), O(E);
+	var Ce = z(E, 2), Te = R(Ce), Ee = R(Te);
+	Q(Ee), Rr(Ee, 3), we(), O(Te);
+	var De = z(Te, 2), Oe = (e) => {
 		var t = Zr(), n = R(t);
 		Q(n);
 		var r = z(n, 4), o = R(r);
@@ -2169,17 +2171,17 @@ function oi(e, t) {
 			Rr(n, X(i).injectDepth), l !== (l = X(i).injectRole) && (r.value = (r.__value = X(i).injectRole) ?? "", Ar(r, X(i).injectRole));
 		}), Z("change", n, (e) => a("injectDepth", Number(e.target.value))), Z("change", r, (e) => a("injectRole", Number(e.target.value))), or(e, t);
 	};
-	pr(Te, (e) => {
-		X(i).injectPosition === 3 && e(Ee);
-	}), O(E), O(ve);
-	var De = z(ve, 4), Oe = z(R(De), 2), ke = R(Oe);
-	Q(ke);
-	var k = z(ke, 2);
-	Q(k);
-	var Ae = z(k, 2);
-	O(Oe);
-	var Ne = z(Oe, 2);
-	vr(Ne, 21, () => X(r).customButtons, mr, (e, t, n) => {
+	pr(De, (e) => {
+		X(i).injectPosition === 3 && e(Oe);
+	}), O(Ce), O(ye);
+	var ke = z(ye, 4), k = z(R(ke), 2), Ae = R(k);
+	Q(Ae);
+	var Ne = z(Ae, 2);
+	Q(Ne);
+	var Pe = z(Ne, 2);
+	O(k);
+	var Fe = z(k, 2);
+	vr(Fe, 21, () => X(r).customButtons, mr, (e, t, n) => {
 		var i = Qr(), a = R(i), o = R(a);
 		O(a);
 		var s = z(a, 2), c = R(s);
@@ -2188,19 +2190,19 @@ function oi(e, t) {
 		O(s), O(i), un(() => {
 			sr(o, `${X(t).label ?? ""} (${X(t).hour ?? ""}:00)`), l.disabled = n === X(r).customButtons.length - 1;
 		}), Z("click", c, () => d("customButtons", n, -1)), Z("click", l, () => d("customButtons", n, 1)), Z("click", u, () => h(n)), or(e, i);
-	}), O(Ne), O(De);
-	var Pe = z(De, 4), Fe = z(R(Pe), 2), A = R(Fe);
-	Q(A);
-	var Ie = z(A, 2), Le = R(Ie);
-	Le.value = Le.__value = "m";
-	var j = z(Le);
-	j.value = j.__value = "h";
-	var Re = z(j);
-	Re.value = Re.__value = "d", O(Ie);
-	var M = z(Ie, 2);
-	O(Fe);
-	var ze = z(Fe, 2);
-	vr(ze, 21, () => X(r).customAdjustments, mr, (e, t, n) => {
+	}), O(Fe), O(ke);
+	var A = z(ke, 4), Ie = z(R(A), 2), Le = R(Ie);
+	Q(Le);
+	var j = z(Le, 2), Re = R(j);
+	Re.value = Re.__value = "m";
+	var M = z(Re);
+	M.value = M.__value = "h";
+	var ze = z(M);
+	ze.value = ze.__value = "d", O(j);
+	var Be = z(j, 2);
+	O(Ie);
+	var Ve = z(Ie, 2);
+	vr(Ve, 21, () => X(r).customAdjustments, mr, (e, t, n) => {
 		var i = $r(), a = R(i), o = R(a);
 		O(a);
 		var s = z(a, 2), c = R(s);
@@ -2209,8 +2211,8 @@ function oi(e, t) {
 		O(s), O(i), un(() => {
 			sr(o, `+/- ${X(t).amount ?? ""}${X(t).unit ?? ""}`), l.disabled = n === X(r).customAdjustments.length - 1;
 		}), Z("click", c, () => d("customAdjustments", n, -1)), Z("click", l, () => d("customAdjustments", n, 1)), Z("click", u, () => y(n)), or(e, i);
-	}), O(ze), O(Pe), O(re), wr(re, (e) => C?.(e));
-	var Be = z(re, 2), Ve = (e) => {
+	}), O(Ve), O(A), O(re), wr(re, (e) => C?.(e));
+	var He = z(re, 2), N = (e) => {
 		var t = ii(), n = R(t), o = z(R(n), 2);
 		Q(o), O(n);
 		var d = z(n, 2), f = (e) => {
@@ -2242,11 +2244,11 @@ function oi(e, t) {
 			kr(t, `top: ${X(ee).top ?? ""}px; left: ${X(ee).left ?? ""}px; background: var(--SmartThemeBlurTintColor); backdrop-filter: blur(var(--SmartThemeBlurStrength)); border: 1px solid var(--SmartThemeBorderColor);`), Rr(o, e), Rr(g, X(i).autoAdvanceMinutes);
 		}, [() => X(s)()]), Z("mousedown", n, S), Z("change", o, c), Z("mousedown", o, (e) => e.stopPropagation()), Z("mousedown", h, (e) => e.stopPropagation()), Z("change", g, (e) => a("autoAdvanceMinutes", Number(e.target.value))), or(e, t);
 	};
-	pr(Be, (e) => {
-		X(r).showWidget && X(r).isEnabled && e(Ve);
+	pr(He, (e) => {
+		X(r).showWidget && X(r).isEnabled && e(N);
 	}), un((e) => {
-		zr(ae, X(r).isEnabled), Rr(se, e), Rr(le, X(i).autoAdvanceMinutes), Rr(de, X(i).promptFormat), zr(ye, X(i).injectPosition === 0), zr(xe, X(i).injectPosition === 1), zr(Se, X(i).injectPosition === 2), zr(Ce, X(i).injectPosition === 3);
-	}, [() => X(s)()]), Z("change", ae, (e) => o("isEnabled", e.target.checked)), Z("change", se, c), Z("change", le, (e) => a("autoAdvanceMinutes", Number(e.target.value))), Z("change", de, (e) => a("promptFormat", e.target.value)), Z("change", ye, () => a("injectPosition", 0)), Z("change", xe, () => a("injectPosition", 1)), Z("change", Se, () => a("injectPosition", 2)), Z("change", Ce, () => a("injectPosition", 3)), Wr(ke, () => X(f), (e) => I(f, e)), Wr(k, () => X(p), (e) => I(p, e)), Z("click", Ae, m), Wr(A, () => X(g), (e) => I(g, e)), Mr(Ie, () => X(_), (e) => I(_, e)), Z("click", M, v), or(e, ne), Me();
+		zr(ae, X(r).isEnabled), Rr(se, e), Rr(le, X(i).autoAdvanceMinutes), Rr(de, X(i).injectFormat), Rr(pe, X(i).appendFormat), zr(xe, X(i).injectPosition === 0), zr(Se, X(i).injectPosition === 1), zr(D, X(i).injectPosition === 2), zr(Ee, X(i).injectPosition === 3);
+	}, [() => X(s)()]), Z("change", ae, (e) => o("isEnabled", e.target.checked)), Z("change", se, c), Z("change", le, (e) => a("autoAdvanceMinutes", Number(e.target.value))), Z("change", de, (e) => a("injectFormat", e.target.value)), Z("change", pe, (e) => a("appendFormat", e.target.value)), Z("change", xe, () => a("injectPosition", 0)), Z("change", Se, () => a("injectPosition", 1)), Z("change", D, () => a("injectPosition", 2)), Z("change", Ee, () => a("injectPosition", 3)), Wr(Ae, () => X(f), (e) => I(f, e)), Wr(Ne, () => X(p), (e) => I(p, e)), Z("click", Pe, m), Wr(Le, () => X(g), (e) => I(g, e)), Mr(j, () => X(_), (e) => I(_, e)), Z("click", Be, v), or(e, ne), Me();
 }
 Qn([
 	"change",
@@ -2285,7 +2287,8 @@ var ci = window.extension_prompt_types || {
 }, di = {
 	currentDateTime: new Date().toISOString(),
 	autoAdvanceMinutes: 0,
-	promptFormat: "[System Note - Current Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}. Do not generate timestamps or 'time' tags in your responses. The system handles this automatically.]",
+	injectFormat: "[System Note - Current Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}. Do not generate timestamps or time tags in your responses. The system handles this automatically.]",
+	appendFormat: "[Current Date and Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}]",
 	injectPosition: 3,
 	injectDepth: 2,
 	injectRole: 0
@@ -2303,26 +2306,27 @@ const $ = {
 };
 function fi() {
 	let e = window.SillyTavern.getContext().chatMetadata;
-	e && e[si] ? $.chat = {
+	e && e[si] ? ($.chat = {
 		...di,
 		...e[si]
-	} : $.chat = { ...di }, mi(), window.dispatchEvent(new CustomEvent("st-dt-chat-loaded"));
+	}, $.chat.promptFormat && ($.chat.injectFormat = $.chat.promptFormat, $.chat.appendFormat = di.appendFormat, delete $.chat.promptFormat, $.saveChat())) : $.chat = { ...di }, mi(), window.dispatchEvent(new CustomEvent("st-dt-chat-loaded"));
 }
-function pi() {
-	let e = new Date($.chat.currentDateTime);
-	if (isNaN(e.getTime())) return "";
-	let t = $.chat.promptFormat, n = {
-		"{{day}}": e.toLocaleDateString("en-US", { weekday: "long" }),
-		"{{date}}": e.getDate().toString(),
-		"{{month}}": e.toLocaleDateString("en-US", { month: "long" }),
-		"{{year}}": e.getFullYear().toString(),
-		"{{time}}": e.toLocaleTimeString("en-US", {
+function pi(e) {
+	if (!e) return "";
+	let t = new Date($.chat.currentDateTime);
+	if (isNaN(t.getTime())) return "";
+	let n = e, r = {
+		"{{day}}": t.toLocaleDateString("en-US", { weekday: "long" }),
+		"{{date}}": t.getDate().toString(),
+		"{{month}}": t.toLocaleDateString("en-US", { month: "long" }),
+		"{{year}}": t.getFullYear().toString(),
+		"{{time}}": t.toLocaleTimeString("en-US", {
 			hour: "2-digit",
 			minute: "2-digit"
 		})
 	};
-	for (let [e, r] of Object.entries(n)) t = t.replaceAll(e, r);
-	return t;
+	for (let [e, t] of Object.entries(r)) n = n.replaceAll(e, t);
+	return n;
 }
 function mi() {
 	let { setExtensionPrompt: e } = window.SillyTavern.getContext();
@@ -2331,7 +2335,7 @@ function mi() {
 		e(si, "", ci.NONE, 0, !1, 0);
 		return;
 	}
-	let t = pi(), n = ci.NONE;
+	let t = pi($.chat.injectFormat), n = ci.NONE;
 	$.chat.injectPosition === 1 && (n = ci.BEFORE_PROMPT), $.chat.injectPosition === 2 && (n = ci.IN_PROMPT), $.chat.injectPosition === 3 && (n = ci.INCHAT);
 	let r = li.SYSTEM;
 	$.chat.injectRole === 1 && (r = li.USER), $.chat.injectRole === 2 && (r = li.ASSISTANT);
@@ -2361,7 +2365,11 @@ window.jQuery(async (e) => {
 			e.setMinutes(e.getMinutes() + Number($.chat.autoAdvanceMinutes)), $.chat.currentDateTime = e.toISOString(), $.saveChat(), window.dispatchEvent(new CustomEvent("st-dt-chat-loaded"));
 		}
 		let e = t.chat, n = e[e.length - 1];
-		n && n.is_user === !1 && (n.mes = n.mes.replace(/<time>[\s\S]*?<\/time>/gi, "").trim(), n.mes += `\n<time>${pi()}</time>`, window.SillyTavern.getContext().saveChat());
+		if (n && n.is_user === !1) {
+			n.mes = n.mes.replace(/<time>[\s\S]*?<\/time>/gi, "").trim();
+			let e = pi($.chat.appendFormat);
+			e && (n.mes += `\n<time>${e}</time>`, window.SillyTavern.getContext().saveChat());
+		}
 	}), fi();
 });
 export { $ as extState };
