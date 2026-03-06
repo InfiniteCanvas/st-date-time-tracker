@@ -89,7 +89,7 @@ window.jQuery(async ($) => {
                 <b>Date/Time Tracker</b>
                 <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
             </div>
-            <div class="inline-drawer-content" id="${MODULE_NAME}-settings-container"></div>
+            <div class="inline-drawer-content" id="${ MODULE_NAME }-settings-container"></div>
         </div>
     `);
 
