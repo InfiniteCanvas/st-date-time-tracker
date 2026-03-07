@@ -2261,7 +2261,7 @@ function ci(e) {
 	let t = e.replace(/<\/?time[^>]*>[\s\S]*?(?:<\/time>)?/gi, "").trim(), n = $.chat.appendFormat;
 	if (n) {
 		let e = n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-		e = e.replace(/\\\{\\\{year\\\}\\\}/g, "\\d{2,4}").replace(/\\\{\\\{date\\\}\\\}/g, "\\d{1,2}").replace(/\\\{\\\{time\\\}\\\}/g, "\\d{1,2}:\\d{2}(?:\\s?(?:AM|PM|am|pm))?");
+		e = e.replace(/\\\{\\\{year\\\}\\\}/g, "\\d{2,4}").replace(/\\\{\\\{date\\\}\\\}/g, "\\d{1,2}").replace(/\\\{\\\{day\\\}\\\}/g, "[a-zA-Z]+").replace(/\\\{\\\{month\\\}\\\}/g, "[a-zA-Z]+").replace(/\\\{\\\{time\\\}\\\}/g, "\\d{1,2}:\\d{2}(?:\\s?(?:AM|PM|am|pm))?");
 		let r = RegExp("\\s*" + e + "\\s*", "g");
 		t = t.replace(r, "").trim();
 	}
@@ -2298,8 +2298,8 @@ var li = window.extension_prompt_types || {
 }, fi = {
 	currentDateTime: new Date().toISOString(),
 	autoAdvanceMinutes: 0,
-	injectFormat: "[System Note - Current Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}. Do not generate timestamps or time tags in your responses. The system handles this automatically.]",
-	appendFormat: "[Current Date and Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}]",
+	injectFormat: "[System Note - Current Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}. Do not generate timestamps or <time> tags in your responses. The system handles this automatically.]",
+	appendFormat: "Current Date and Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}",
 	injectPosition: 3,
 	injectDepth: 2,
 	injectRole: 0
@@ -2369,17 +2369,17 @@ window.jQuery(async (e) => {
 		$.global.showWidget = !$.global.showWidget, $.saveGlobal(), window.dispatchEvent(new CustomEvent("st-dt-widget-toggled"));
 	});
 	let t = window.SillyTavern.getContext();
-	t.eventSource.on(t.event_types.CHAT_LOADED, pi), t.eventSource.on(t.event_types.MESSAGE_RECEIVED, () => {
+	t.eventSource.on(t.event_types.CHAT_LOADED, pi), t.eventSource.on(t.event_types.MESSAGE_RECEIVED, (e) => {
 		if (!$.global.isEnabled) return;
-		if ($.chat.autoAdvanceMinutes > 0) {
+		let n = typeof e == "number" && e >= 0;
+		if (n && $.chat.autoAdvanceMinutes > 0) {
 			let e = new Date($.chat.currentDateTime);
 			e.setMinutes(e.getMinutes() + Number($.chat.autoAdvanceMinutes)), $.chat.currentDateTime = e.toISOString(), $.saveChat(), window.dispatchEvent(new CustomEvent("st-dt-chat-loaded"));
 		}
-		let e = t.chat, n = e[e.length - 1];
-		if (n && n.is_user === !1) {
-			n.mes = ci(n.mes);
+		let r = t.chat, i = r[r.length - 1];
+		if (i && i.is_user === !1 && (i.mes = ci(i.mes), n)) {
 			let e = mi($.chat.appendFormat);
-			e && (n.mes += `\n<time>${e}</time>`, window.SillyTavern.getContext().saveChat());
+			e && (i.mes += `\n<time>${e}</time>`, window.SillyTavern.getContext().saveChat());
 		}
 	}), pi();
 });
