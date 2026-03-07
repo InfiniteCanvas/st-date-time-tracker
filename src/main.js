@@ -4,8 +4,26 @@ import App from './App.svelte';
 
 const MODULE_NAME = 'st-datetime-tracker';
 
+function stripTimeArtifacts ( text ) {
+    if ( !text ) return text;
+
+    // 1) Remove any <time>...</time> or stray <time> / </time> tags
+    let cleaned = text.replace ( /<\/?time[^>]*>[\s\S]*?(?:<\/time>)?/gi, '' ).trim ();
+
+    // 2) Remove any raw occurrence of the append string (without tags)
+    const appendStr = getFormattedString ( extState.chat.appendFormat );
+    if ( appendStr ) {
+        // Escape regex metacharacters in appendStr to build a literal pattern
+        const escaped = appendStr.replace ( /[.*+?^${}()|[\]\\]/g, '\\$&' );
+        const re = new RegExp ( escaped, 'g' );
+        cleaned = cleaned.replace ( re, '' ).trim ();
+    }
+
+    return cleaned;
+}
+
 // 1. Defensively ensure the ST settings object exists before we touch it
-if (!window.extension_settings) {
+if ( !window.extension_settings ) {
     window.extension_settings = {};
 }
 
@@ -26,7 +44,7 @@ const defaultGlobalSettings = {
 };
 
 const defaultChatSettings = {
-    currentDateTime: new Date().toISOString(),
+    currentDateTime: new Date ().toISOString (),
     autoAdvanceMinutes: 0,
     injectFormat: "[System Note - Current Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}. Do not generate timestamps or time tags in your responses. The system handles this automatically.]",
     appendFormat: "[Current Date and Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}]", // Will be wrapped in <time>
@@ -36,7 +54,7 @@ const defaultChatSettings = {
 };
 
 // Initialize our extension's slice of the global settings
-if (!window.extension_settings[MODULE_NAME]) {
+if ( !window.extension_settings[MODULE_NAME] ) {
     window.extension_settings[MODULE_NAME] = { ...defaultGlobalSettings };
 }
 
@@ -44,148 +62,146 @@ if (!window.extension_settings[MODULE_NAME]) {
 export const extState = {
     global: window.extension_settings[MODULE_NAME],
     chat: { ...defaultChatSettings },
-    saveGlobal: () => window.SillyTavern.getContext().saveSettingsDebounced(),
+    saveGlobal: () => window.SillyTavern.getContext ().saveSettingsDebounced (),
     saveChat: () => {
-        const metadata = window.SillyTavern.getContext().chatMetadata;
-        if (metadata) {
+        const metadata = window.SillyTavern.getContext ().chatMetadata;
+        if ( metadata ) {
             metadata[MODULE_NAME] = { ...extState.chat };
-            window.SillyTavern.getContext().saveMetadataDebounced();
+            window.SillyTavern.getContext ().saveMetadataDebounced ();
         }
     },
-    updatePrompt: () => refreshPrompt()
+    updatePrompt: () => refreshPrompt ()
 };
 
-function loadChatSettings() {
-    const metadata = window.SillyTavern.getContext().chatMetadata;
-    if (metadata && metadata[MODULE_NAME]) {
+function loadChatSettings () {
+    const metadata = window.SillyTavern.getContext ().chatMetadata;
+    if ( metadata && metadata[MODULE_NAME] ) {
         extState.chat = { ...defaultChatSettings, ...metadata[MODULE_NAME] };
 
         // Migration: If old chat has 'promptFormat', split it into the two new fields
-        if (extState.chat.promptFormat) {
+        if ( extState.chat.promptFormat ) {
             extState.chat.injectFormat = extState.chat.promptFormat;
             extState.chat.appendFormat = defaultChatSettings.appendFormat;
             delete extState.chat.promptFormat;
-            extState.saveChat();
+            extState.saveChat ();
         }
     } else {
         extState.chat = { ...defaultChatSettings };
     }
-    refreshPrompt();
-    window.dispatchEvent(new CustomEvent('st-dt-chat-loaded'));
+    refreshPrompt ();
+    window.dispatchEvent ( new CustomEvent ( 'st-dt-chat-loaded' ) );
 }
 
-function getFormattedString(template) {
-    if (!template) return "";
-    const dt = new Date(extState.chat.currentDateTime);
-    if (isNaN(dt.getTime())) return "";
+function getFormattedString ( template ) {
+    if ( !template ) return "";
+    const dt = new Date ( extState.chat.currentDateTime );
+    if ( isNaN ( dt.getTime () ) ) return "";
 
     let result = template;
     const replacers = {
-        "{{day}}": dt.toLocaleDateString('en-US', { weekday: 'long' }),
-        "{{date}}": dt.getDate().toString(),
-        "{{month}}": dt.toLocaleDateString('en-US', { month: 'long' }),
-        "{{year}}": dt.getFullYear().toString(),
-        "{{time}}": dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+        "{{day}}": dt.toLocaleDateString ( 'en-US', { weekday: 'long' } ),
+        "{{date}}": dt.getDate ().toString (),
+        "{{month}}": dt.toLocaleDateString ( 'en-US', { month: 'long' } ),
+        "{{year}}": dt.getFullYear ().toString (),
+        "{{time}}": dt.toLocaleTimeString ( 'en-US', { hour: '2-digit', minute: '2-digit' } )
     };
-    for (const [key, val] of Object.entries(replacers)) {
-        result = result.replaceAll(key, val);
+    for ( const [ key, val ] of Object.entries ( replacers ) ) {
+        result = result.replaceAll ( key, val );
     }
     return result;
 }
 
-function refreshPrompt() {
-    const { setExtensionPrompt } = window.SillyTavern.getContext();
-    if (!extState.global.isEnabled || typeof setExtensionPrompt !== 'function') return;
+function refreshPrompt () {
+    const { setExtensionPrompt } = window.SillyTavern.getContext ();
+    if ( !extState.global.isEnabled || typeof setExtensionPrompt !== 'function' ) return;
 
     // 1. Check if the user turned off injection entirely
-    if (extState.chat.injectPosition === 0) {
-        setExtensionPrompt(MODULE_NAME, "", extension_prompt_types.NONE, 0, false, 0);
+    if ( extState.chat.injectPosition === 0 ) {
+        setExtensionPrompt ( MODULE_NAME, "", extension_prompt_types.NONE, 0, false, 0 );
         return;
     }
 
-    const content = getFormattedString(extState.chat.injectFormat);
+    const content = getFormattedString ( extState.chat.injectFormat );
 
     // 2. Map the UI position number to SillyTavern's actual enum types
     let type = extension_prompt_types.NONE;
-    if (extState.chat.injectPosition === 1) type = extension_prompt_types.BEFORE_PROMPT;
-    if (extState.chat.injectPosition === 2) type = extension_prompt_types.IN_PROMPT;
-    if (extState.chat.injectPosition === 3) type = extension_prompt_types.INCHAT;
+    if ( extState.chat.injectPosition === 1 ) type = extension_prompt_types.BEFORE_PROMPT;
+    if ( extState.chat.injectPosition === 2 ) type = extension_prompt_types.IN_PROMPT;
+    if ( extState.chat.injectPosition === 3 ) type = extension_prompt_types.INCHAT;
 
     // 3. Map the UI role number to SillyTavern's actual role types
     let role = extension_prompt_roles.SYSTEM;
-    if (extState.chat.injectRole === 1) role = extension_prompt_roles.USER;
-    if (extState.chat.injectRole === 2) role = extension_prompt_roles.ASSISTANT;
+    if ( extState.chat.injectRole === 1 ) role = extension_prompt_roles.USER;
+    if ( extState.chat.injectRole === 2 ) role = extension_prompt_roles.ASSISTANT;
 
-    const depth = Number(extState.chat.injectDepth) || 0;
+    const depth = Number ( extState.chat.injectDepth ) || 0;
 
     // Inject using the customized settings
-    setExtensionPrompt(MODULE_NAME, content, type, depth, false, role);
+    setExtensionPrompt ( MODULE_NAME, content, type, depth, false, role );
 }
 
 // Wait for jQuery ready state (ST is fully loaded here)
-window.jQuery(async ($) => {
+window.jQuery ( async ( $ ) => {
     // 1. Inject Settings UI Container (Do NOT mount Svelte here)
-    $('#extensions_settings').append(`
+    $ ( '#extensions_settings' ).append ( `
         <div class="inline-drawer">
             <div class="inline-drawer-toggle inline-drawer-header">
                 <b>Date/Time Tracker</b>
                 <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
             </div>
-            <div class="inline-drawer-content" id="${MODULE_NAME}-settings-container"></div>
+            <div class="inline-drawer-content" id="${ MODULE_NAME }-settings-container"></div>
         </div>
-    `);
+    ` );
 
     // 2. Mount Svelte App to document.body (so the floating widget is never hidden)
-    mount(App, { target: document.body, props: { extState } });
+    mount ( App, { target: document.body, props: { extState } } );
 
     // 3. Add Magic Wand Button
-    $('#extensionsMenu').append(`
+    $ ( '#extensionsMenu' ).append ( `
         <div id="st-dt-wand-button" class="list-group-item flex-container flexGap5">
             <div class="fa-solid fa-clock extensionsMenuExtensionButton" title="Toggle DateTime Tracker"></div>
             <span class="extensionsMenuExtensionButtonLabel">DateTime Tracker</span>
         </div>
-    `);
+    ` );
 
-    $('#st-dt-wand-button').on('click', () => {
+    $ ( '#st-dt-wand-button' ).on ( 'click', () => {
         extState.global.showWidget = !extState.global.showWidget;
-        extState.saveGlobal();
-        window.dispatchEvent(new CustomEvent('st-dt-widget-toggled'));
-    });
+        extState.saveGlobal ();
+        window.dispatchEvent ( new CustomEvent ( 'st-dt-widget-toggled' ) );
+    } );
 
     // 4. Register ST Event Listeners safely via context
-    const STContext = window.SillyTavern.getContext();
+    const STContext = window.SillyTavern.getContext ();
 
-    STContext.eventSource.on(STContext.event_types.CHAT_LOADED, loadChatSettings);
+    STContext.eventSource.on ( STContext.event_types.CHAT_LOADED, loadChatSettings );
 
-    STContext.eventSource.on(STContext.event_types.MESSAGE_RECEIVED, () => {
-        if (!extState.global.isEnabled) return;
+    STContext.eventSource.on ( STContext.event_types.MESSAGE_RECEIVED, () => {
+        if ( !extState.global.isEnabled ) return;
 
         // Auto-advance time logic
-        if (extState.chat.autoAdvanceMinutes > 0) {
-            let dt = new Date(extState.chat.currentDateTime);
-            dt.setMinutes(dt.getMinutes() + Number(extState.chat.autoAdvanceMinutes));
-            extState.chat.currentDateTime = dt.toISOString();
-            extState.saveChat();
-            window.dispatchEvent(new CustomEvent('st-dt-chat-loaded'));
+        if ( extState.chat.autoAdvanceMinutes > 0 ) {
+            let dt = new Date ( extState.chat.currentDateTime );
+            dt.setMinutes ( dt.getMinutes () + Number ( extState.chat.autoAdvanceMinutes ) );
+            extState.chat.currentDateTime = dt.toISOString ();
+            extState.saveChat ();
+            window.dispatchEvent ( new CustomEvent ( 'st-dt-chat-loaded' ) );
         }
 
-        // Append <time> tag to AI response
         const chat = STContext.chat;
         const lastMsg = chat[chat.length - 1];
-        if (lastMsg && lastMsg.is_user === false) {
+        if ( lastMsg && lastMsg.is_user === false ) {
+            // 1) Remove any AI-generated time artifacts
+            lastMsg.mes = stripTimeArtifacts ( lastMsg.mes );
 
-            // STRIP out any hallucinated <time> tags the AI tried to generate itself
-            lastMsg.mes = lastMsg.mes.replace(/<time>[\s\S]*?<\/time>/gi, '').trim();
-
-            // Generate the append string and add it wrapped in the HTML tag
-            const appendStr = getFormattedString(extState.chat.appendFormat);
-            if (appendStr) {
-                lastMsg.mes += `\n<time>${appendStr}</time>`;
-                window.SillyTavern.getContext().saveChat();
+            // 2) Append your canonical time tag
+            const appendStr = getFormattedString ( extState.chat.appendFormat );
+            if ( appendStr ) {
+                lastMsg.mes += `\n<time>${ appendStr }</time>`;
+                window.SillyTavern.getContext ().saveChat ();
             }
         }
-    });
+    } );
 
     // Initial Load
-    loadChatSettings();
-});
+    loadChatSettings ();
+} );

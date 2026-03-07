@@ -2256,17 +2256,26 @@ Qn([
 	"mousedown"
 ]);
 var si = "st-datetime-tracker";
+function ci(e) {
+	if (!e) return e;
+	let t = e.replace(/<\/?time[^>]*>[\s\S]*?(?:<\/time>)?/gi, "").trim(), n = mi($.chat.appendFormat);
+	if (n) {
+		let e = n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), r = new RegExp(e, "g");
+		t = t.replace(r, "").trim();
+	}
+	return t;
+}
 window.extension_settings || (window.extension_settings = {});
-var ci = window.extension_prompt_types || {
+var li = window.extension_prompt_types || {
 	NONE: -1,
 	IN_PROMPT: 0,
 	INCHAT: 1,
 	BEFORE_PROMPT: 2
-}, li = window.extension_prompt_roles || {
+}, ui = window.extension_prompt_roles || {
 	SYSTEM: 0,
 	USER: 1,
 	ASSISTANT: 2
-}, ui = {
+}, di = {
 	customButtons: [],
 	customAdjustments: [
 		{
@@ -2284,7 +2293,7 @@ var ci = window.extension_prompt_types || {
 	],
 	showWidget: !0,
 	isEnabled: !0
-}, di = {
+}, fi = {
 	currentDateTime: new Date().toISOString(),
 	autoAdvanceMinutes: 0,
 	injectFormat: "[System Note - Current Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}. Do not generate timestamps or time tags in your responses. The system handles this automatically.]",
@@ -2293,25 +2302,25 @@ var ci = window.extension_prompt_types || {
 	injectDepth: 2,
 	injectRole: 0
 };
-window.extension_settings[si] || (window.extension_settings[si] = { ...ui });
+window.extension_settings[si] || (window.extension_settings[si] = { ...di });
 const $ = {
 	global: window.extension_settings[si],
-	chat: { ...di },
+	chat: { ...fi },
 	saveGlobal: () => window.SillyTavern.getContext().saveSettingsDebounced(),
 	saveChat: () => {
 		let e = window.SillyTavern.getContext().chatMetadata;
 		e && (e[si] = { ...$.chat }, window.SillyTavern.getContext().saveMetadataDebounced());
 	},
-	updatePrompt: () => mi()
+	updatePrompt: () => hi()
 };
-function fi() {
+function pi() {
 	let e = window.SillyTavern.getContext().chatMetadata;
 	e && e[si] ? ($.chat = {
-		...di,
+		...fi,
 		...e[si]
-	}, $.chat.promptFormat && ($.chat.injectFormat = $.chat.promptFormat, $.chat.appendFormat = di.appendFormat, delete $.chat.promptFormat, $.saveChat())) : $.chat = { ...di }, mi(), window.dispatchEvent(new CustomEvent("st-dt-chat-loaded"));
+	}, $.chat.promptFormat && ($.chat.injectFormat = $.chat.promptFormat, $.chat.appendFormat = fi.appendFormat, delete $.chat.promptFormat, $.saveChat())) : $.chat = { ...fi }, hi(), window.dispatchEvent(new CustomEvent("st-dt-chat-loaded"));
 }
-function pi(e) {
+function mi(e) {
 	if (!e) return "";
 	let t = new Date($.chat.currentDateTime);
 	if (isNaN(t.getTime())) return "";
@@ -2328,17 +2337,17 @@ function pi(e) {
 	for (let [e, t] of Object.entries(r)) n = n.replaceAll(e, t);
 	return n;
 }
-function mi() {
+function hi() {
 	let { setExtensionPrompt: e } = window.SillyTavern.getContext();
 	if (!$.global.isEnabled || typeof e != "function") return;
 	if ($.chat.injectPosition === 0) {
-		e(si, "", ci.NONE, 0, !1, 0);
+		e(si, "", li.NONE, 0, !1, 0);
 		return;
 	}
-	let t = pi($.chat.injectFormat), n = ci.NONE;
-	$.chat.injectPosition === 1 && (n = ci.BEFORE_PROMPT), $.chat.injectPosition === 2 && (n = ci.IN_PROMPT), $.chat.injectPosition === 3 && (n = ci.INCHAT);
-	let r = li.SYSTEM;
-	$.chat.injectRole === 1 && (r = li.USER), $.chat.injectRole === 2 && (r = li.ASSISTANT);
+	let t = mi($.chat.injectFormat), n = li.NONE;
+	$.chat.injectPosition === 1 && (n = li.BEFORE_PROMPT), $.chat.injectPosition === 2 && (n = li.IN_PROMPT), $.chat.injectPosition === 3 && (n = li.INCHAT);
+	let r = ui.SYSTEM;
+	$.chat.injectRole === 1 && (r = ui.USER), $.chat.injectRole === 2 && (r = ui.ASSISTANT);
 	let i = Number($.chat.injectDepth) || 0;
 	e(si, t, n, i, !1, r);
 }
@@ -2358,7 +2367,7 @@ window.jQuery(async (e) => {
 		$.global.showWidget = !$.global.showWidget, $.saveGlobal(), window.dispatchEvent(new CustomEvent("st-dt-widget-toggled"));
 	});
 	let t = window.SillyTavern.getContext();
-	t.eventSource.on(t.event_types.CHAT_LOADED, fi), t.eventSource.on(t.event_types.MESSAGE_RECEIVED, () => {
+	t.eventSource.on(t.event_types.CHAT_LOADED, pi), t.eventSource.on(t.event_types.MESSAGE_RECEIVED, () => {
 		if (!$.global.isEnabled) return;
 		if ($.chat.autoAdvanceMinutes > 0) {
 			let e = new Date($.chat.currentDateTime);
@@ -2366,10 +2375,10 @@ window.jQuery(async (e) => {
 		}
 		let e = t.chat, n = e[e.length - 1];
 		if (n && n.is_user === !1) {
-			n.mes = n.mes.replace(/<time>[\s\S]*?<\/time>/gi, "").trim();
-			let e = pi($.chat.appendFormat);
+			n.mes = ci(n.mes);
+			let e = mi($.chat.appendFormat);
 			e && (n.mes += `\n<time>${e}</time>`, window.SillyTavern.getContext().saveChat());
 		}
-	}), fi();
+	}), pi();
 });
 export { $ as extState };
