@@ -10,17 +10,35 @@ function stripTimeArtifacts ( text ) {
     // 1) Remove any <time>...</time> or stray <time> / </time> tags
     let cleaned = text.replace ( /<\/?time[^>]*>[\s\S]*?(?:<\/time>)?/gi, '' ).trim ();
 
-    // 2) Remove any raw occurrence of the append string (without tags)
-    const appendStr = getFormattedString ( extState.chat.appendFormat );
-    if ( appendStr ) {
-        // Escape regex metacharacters in appendStr to build a literal pattern
-        const escaped = appendStr.replace ( /[.*+?^${}()|[\]\\]/g, '\\$&' );
-        const re = new RegExp ( escaped, 'g' );
+    // 2) Build a regex from appendFormat that matches any numeric date/time
+    const template = extState.chat.appendFormat;
+    if ( template ) {
+        // Escape all regex meta characters first
+        let pattern = template.replace ( /[.*+?^${}()|[\]\\]/g, '\\$&' );
+
+        // Replace known placeholders with numeric-accepting fragments
+        // - {{year}}       => 2–4 digits
+        // - {{date}}       => 1–2 digits
+        // - {{time}}       => something like "09:25 AM" or "21:03"
+        // Other placeholders ({{day}}, {{month}}) are left as literal words.
+
+        pattern = pattern
+            .replace ( /\\\{\\\{year\\\}\\\}/g, '\\d{2,4}' )
+            .replace ( /\\\{\\\{date\\\}\\\}/g, '\\d{1,2}' )
+            // Basic time matcher: "H:MM", "HH:MM", optionally " AM/PM"
+            .replace (
+                /\\\{\\\{time\\\}\\\}/g,
+                '\\d{1,2}:\\d{2}(?:\\s?(?:AM|PM|am|pm))?'
+            );
+
+        // Wrap in optional whitespace and line boundaries to avoid partial matches
+        const re = new RegExp ( '\\s*' + pattern + '\\s*', 'g' );
         cleaned = cleaned.replace ( re, '' ).trim ();
     }
 
     return cleaned;
 }
+
 
 // 1. Defensively ensure the ST settings object exists before we touch it
 if ( !window.extension_settings ) {

@@ -2258,9 +2258,11 @@ Qn([
 var si = "st-datetime-tracker";
 function ci(e) {
 	if (!e) return e;
-	let t = e.replace(/<\/?time[^>]*>[\s\S]*?(?:<\/time>)?/gi, "").trim(), n = mi($.chat.appendFormat);
+	let t = e.replace(/<\/?time[^>]*>[\s\S]*?(?:<\/time>)?/gi, "").trim(), n = $.chat.appendFormat;
 	if (n) {
-		let e = n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), r = new RegExp(e, "g");
+		let e = n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+		e = e.replace(/\\\{\\\{year\\\}\\\}/g, "\\d{2,4}").replace(/\\\{\\\{date\\\}\\\}/g, "\\d{1,2}").replace(/\\\{\\\{time\\\}\\\}/g, "\\d{1,2}:\\d{2}(?:\\s?(?:AM|PM|am|pm))?");
+		let r = RegExp("\\s*" + e + "\\s*", "g");
 		t = t.replace(r, "").trim();
 	}
 	return t;
