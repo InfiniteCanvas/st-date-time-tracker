@@ -270,7 +270,18 @@ window.jQuery(async ($) => {
 
     // Trigger logic when a user message is sent
     STContext.eventSource.on(STContext.event_types.MESSAGE_SENT, () => {
-        if (!extState.global.isEnabled || extState.chat.appendToUserMessages !== true) return;
+        if (!extState.global.isEnabled) return;
+
+        // Auto-advance time if enabled
+        if (extState.chat.autoAdvanceMinutes > 0) {
+            let dt = new Date(extState.chat.currentDateTime);
+            dt.setMinutes(dt.getMinutes() + Number(extState.chat.autoAdvanceMinutes));
+            extState.chat.currentDateTime = dt.toISOString();
+            extState.saveChat();
+            window.dispatchEvent(new CustomEvent('st-dt-chat-loaded'));
+        }
+
+        if (extState.chat.appendToUserMessages !== true) return;
 
         const chat = STContext.chat;
         const lastMsg = chat[chat.length - 1];

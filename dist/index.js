@@ -2388,7 +2388,12 @@ window.jQuery(async (e) => {
 			e && (i.mes += `\n<time>${e}</time>`, window.SillyTavern.getContext().saveChat());
 		}
 	}), t.eventSource.on(t.event_types.MESSAGE_SENT, () => {
-		if (!$.global.isEnabled || $.chat.appendToUserMessages !== !0) return;
+		if (!$.global.isEnabled) return;
+		if ($.chat.autoAdvanceMinutes > 0) {
+			let e = new Date($.chat.currentDateTime);
+			e.setMinutes(e.getMinutes() + Number($.chat.autoAdvanceMinutes)), $.chat.currentDateTime = e.toISOString(), $.saveChat(), window.dispatchEvent(new CustomEvent("st-dt-chat-loaded"));
+		}
+		if ($.chat.appendToUserMessages !== !0) return;
 		let e = t.chat, n = e[e.length - 1];
 		if (n && n.is_user === !0) {
 			let e = mi($.chat.appendFormat);
