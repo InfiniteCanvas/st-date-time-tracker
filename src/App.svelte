@@ -186,8 +186,28 @@
             onchange={(e) => updateChat('appendFormat', e.target.value)}
         ></textarea>
         <div class="text-[0.65rem] opacity-70 mt-1">
-            Available placeholders: <code>{`{{day}}`}</code>, <code>{`{{month}}`}</code>, <code>{`{{date}}`}</code>, <code>{`{{year}}`}</code>, <code>{`{{time}}`}</code>
+            Available placeholders: <code>{`{{day}}`}</code>, <code>{`{{month}}`}</code>, <code>{`{{date}}`}}</code>, <code>{`{{year}}`}</code>, <code>{`{{time}}`}</code>
         </div>
+    </div>
+
+    <div class="flex flex-col gap-1 mt-2">
+        <b>Append to Messages</b>
+        <label class="flex items-center gap-2 cursor-pointer">
+            <input
+                checked={chat.appendToResponses !== false}
+                onchange={(e) => updateChat('appendToResponses', e.target.checked)}
+                type="checkbox"
+            />
+            Append to AI responses
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer">
+            <input
+                checked={chat.appendToUserMessages === true}
+                onchange={(e) => updateChat('appendToUserMessages', e.target.checked)}
+                type="checkbox"
+            />
+            Append to user messages
+        </label>
     </div>
 
 

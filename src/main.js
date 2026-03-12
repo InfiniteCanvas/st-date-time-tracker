@@ -73,7 +73,9 @@ const defaultChatSettings = {
     appendFormat: "Current Date and Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}",
     injectPosition: 3, // 0 = None, 1 = Before Main, 2 = In Prompt, 3 = In Chat
     injectDepth: 2,
-    injectRole: 0      // 0 = System, 1 = User, 2 = Assistant
+    injectRole: 0,     // 0 = System, 1 = User, 2 = Assistant
+    appendToResponses: true,
+    appendToUserMessages: false
 };
 
 // Initialize our extension's slice of the global settings object
@@ -255,13 +257,30 @@ window.jQuery(async ($) => {
             lastMsg.mes = stripTimeArtifacts(lastMsg.mes);
 
             // 2) ONLY append the visible HTML time tag to actual chat bubbles
-            if (isRealMessage) {
+            if (isRealMessage && extState.chat.appendToResponses !== false) {
                 const appendStr = getFormattedString(extState.chat.appendFormat);
                 if (appendStr) {
                     // Wrap it in HTML <time> tags so our extension's CSS can hide it from the UI!
                     lastMsg.mes += `\n<time>${appendStr}</time>`;
                     window.SillyTavern.getContext().saveChat();
                 }
+            }
+        }
+    });
+
+    // Trigger logic when a user message is sent
+    STContext.eventSource.on(STContext.event_types.MESSAGE_SENT, () => {
+        if (!extState.global.isEnabled || extState.chat.appendToUserMessages !== true) return;
+
+        const chat = STContext.chat;
+        const lastMsg = chat[chat.length - 1];
+
+        if (lastMsg && lastMsg.is_user === true) {
+            const appendStr = getFormattedString(extState.chat.appendFormat);
+            if (appendStr) {
+                // Wrap it in HTML <time> tags so our extension's CSS can hide it from the UI!
+                lastMsg.mes += `\n<time>${appendStr}</time>`;
+                window.SillyTavern.getContext().saveChat();
             }
         }
     });
