@@ -4,6 +4,15 @@
 
     let { extState } = $props ();
 
+    if ( !extState.global.customButtons ) extState.global.customButtons = [];
+    if ( !extState.global.customAdjustments ) {
+        extState.global.customAdjustments = [
+            { amount: 30, unit: 'm' },
+            { amount: 1, unit: 'h' },
+            { amount: 1, unit: 'd' }
+        ];
+    }
+
     let global = $state ( { ...extState.global } );
     let chat = $state ( { ...extState.chat } );
 
@@ -108,12 +117,8 @@
 
     // Drag Logic
     let isDragging = $state ( false );
+    let widgetPos = $state ( { top: 100, left: window.innerWidth - 300 } );
     let startCoords = { x: 0, y: 0 };
-
-    // Derive widgetPos from global settings, with fallback to right side on first run
-    let widgetPos = $derived ( extState.global.widgetPosition?.left !== null && extState.global.widgetPosition?.left !== undefined
-        ? extState.global.widgetPosition
-        : { top: extState.global.widgetPosition?.top || 100, left: window.innerWidth - 300 } );
 
     function onDragStart ( e ) {
         isDragging = true;
@@ -122,14 +127,7 @@
 
     function onDragMove ( e ) {
         if ( !isDragging ) return;
-        extState.global.widgetPosition = { left: e.clientX - startCoords.x, top: e.clientY - startCoords.y };
-    }
-
-    function onDragEnd () {
-        isDragging = false;
-        if ( extState.global.widgetPosition ) {
-            updateGlobal ( 'widgetPosition', { ...extState.global.widgetPosition } );
-        }
+        widgetPos = { left: e.clientX - startCoords.x, top: e.clientY - startCoords.y };
     }
 
     function portal ( node ) {
@@ -143,7 +141,7 @@
     }
 </script>
 
-<svelte:window on:mousemove={onDragMove} on:mouseup={onDragEnd}/>
+<svelte:window on:mousemove={onDragMove} on:mouseup={() => isDragging = false}/>
 
 <!-- MAIN ST SETTINGS MENU -->
 <div class="flex flex-col gap-3 p-2 text-sm" use:portal>

@@ -62,8 +62,7 @@ const defaultGlobalSettings = {
         { amount: 1, unit: 'd' }
     ],
     showWidget: true,
-    isEnabled: true,
-    widgetPosition: { top: 100, left: null }  // null = first-run, use default right side
+    isEnabled: true
 };
 
 // Chat Settings (Unique to each specific chat file)
