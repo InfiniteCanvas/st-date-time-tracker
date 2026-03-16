@@ -2282,10 +2282,35 @@ var li = window.extension_prompt_types || {
 	USER: 1,
 	ASSISTANT: 2
 }, di = {
-	customButtons: [],
+	customButtons: [
+		{
+			label: "Dawn",
+			hour: 6
+		},
+		{
+			label: "Morning",
+			hour: 9
+		},
+		{
+			label: "Noon",
+			hour: 12
+		},
+		{
+			label: "Afternoon",
+			hour: 14
+		},
+		{
+			label: "Dusk",
+			hour: 18
+		},
+		{
+			label: "Evening",
+			hour: 21
+		}
+	],
 	customAdjustments: [
 		{
-			amount: 30,
+			amount: 5,
 			unit: "m"
 		},
 		{
