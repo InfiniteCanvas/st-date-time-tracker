@@ -27,11 +27,7 @@
         };
         const syncGlobal = () => {
             if ( isInChat () ) {
-                const chatOnly = { ...extState.chat };
-                for ( const key of ['isEnabled', 'showWidget', 'customButtons', 'customAdjustments', 'defaultChatSettings'] ) {
-                    delete chatOnly[key];
-                }
-                global = { ...extState.global, ...chatOnly };
+                global = { ...extState.global, ...extState.chat };
             } else {
                 global = { ...extState.global };
             }
@@ -72,8 +68,14 @@
 
     function updateGlobal ( key, value ) {
         global[key] = value;
-        extState.global[key] = value;
-        extState.saveGlobal ();
+
+        if ( isInChat () ) {
+            extState.chat[key] = value;
+            extState.saveChat ();
+        } else {
+            extState.global[key] = value;
+            extState.saveGlobal ();
+        }
     }
 
     let dtLocalStr = $derived ( () => {

@@ -2055,20 +2055,10 @@ function oi(e, t) {
 		let e = () => {
 			L(i, { ...n().chat }, !0);
 		}, t = () => {
-			if (a()) {
-				let e = { ...n().chat };
-				for (let t of [
-					"isEnabled",
-					"showWidget",
-					"customButtons",
-					"customAdjustments",
-					"defaultChatSettings"
-				]) delete e[t];
-				L(r, {
-					...n().global,
-					...e
-				}, !0);
-			} else L(r, { ...n().global }, !0);
+			a() ? L(r, {
+				...n().global,
+				...n().chat
+			}, !0) : L(r, { ...n().global }, !0);
 		};
 		e(), t();
 		let o = () => {
@@ -2082,7 +2072,7 @@ function oi(e, t) {
 		X(i)[e] = t, n().chat[e] = t, a() ? n().saveChat() : (n().global.defaultChatSettings || (n().global.defaultChatSettings = {}), n().global.defaultChatSettings[e] = t, n().saveGlobal()), n().updatePrompt();
 	}
 	function s(e, t) {
-		X(r)[e] = t, n().global[e] = t, n().saveGlobal();
+		X(r)[e] = t, a() ? (n().chat[e] = t, n().saveChat()) : (n().global[e] = t, n().saveGlobal());
 	}
 	let c = mt(() => () => {
 		let e = new Date(X(i).currentDateTime), t = e.getTimezoneOffset() * 6e4;
@@ -2361,9 +2351,7 @@ var li = window.extension_prompt_types || {
 };
 window.extension_settings[si] || (window.extension_settings[si] = { ...fi });
 const $ = {
-	get global() {
-		return window.extension_settings[si];
-	},
+	global: window.extension_settings[si],
 	chat: { ...di },
 	saveGlobal: () => window.SillyTavern.getContext().saveSettingsDebounced(),
 	saveChat: () => {
@@ -2374,22 +2362,10 @@ const $ = {
 };
 function pi() {
 	let e = window.SillyTavern.getContext().chatMetadata, t = $.global.defaultChatSettings || di;
-	if (e && e[si]) {
-		$.chat = {
-			...t,
-			...e[si]
-		};
-		let n = !1;
-		for (let e of [
-			"isEnabled",
-			"showWidget",
-			"customButtons",
-			"customAdjustments",
-			"defaultChatSettings"
-		]) $.chat[e] !== void 0 && (delete $.chat[e], n = !0);
-		n && $.saveChat(), $.chat.promptFormat && ($.chat.injectFormat = $.chat.promptFormat, $.chat.appendFormat = di.appendFormat, delete $.chat.promptFormat, $.saveChat());
-	} else $.chat = { ...t };
-	hi(), window.dispatchEvent(new CustomEvent("st-dt-chat-loaded"));
+	e && e[si] ? ($.chat = {
+		...t,
+		...e[si]
+	}, $.chat.promptFormat && ($.chat.injectFormat = $.chat.promptFormat, $.chat.appendFormat = di.appendFormat, delete $.chat.promptFormat, $.saveChat())) : $.chat = { ...t }, hi(), window.dispatchEvent(new CustomEvent("st-dt-chat-loaded"));
 }
 function mi(e) {
 	if (!e) return "";

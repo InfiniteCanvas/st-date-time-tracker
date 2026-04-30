@@ -1,7 +1,7 @@
 {
   "display_name": "Date Time Tracker",
   "name": "st_date_time_tracker",
-  "version": "1.1",
+  "version": "1.2",
   "js": "dist/index.js",
   "css": "dist/style.css"
 }
