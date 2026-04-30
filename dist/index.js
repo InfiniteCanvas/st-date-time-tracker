@@ -2072,7 +2072,7 @@ function oi(e, t) {
 		X(i)[e] = t, n().chat[e] = t, a() ? n().saveChat() : (n().global.defaultChatSettings || (n().global.defaultChatSettings = {}), n().global.defaultChatSettings[e] = t, n().saveGlobal()), n().updatePrompt();
 	}
 	function s(e, t) {
-		X(r)[e] = t, a() ? (n().chat[e] = t, n().saveChat()) : (n().global[e] = t, n().saveGlobal());
+		X(r)[e] = t, n().global[e] = t, n().saveGlobal();
 	}
 	let c = mt(() => () => {
 		let e = new Date(X(i).currentDateTime), t = e.getTimezoneOffset() * 6e4;

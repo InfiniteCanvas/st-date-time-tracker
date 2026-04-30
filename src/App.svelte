@@ -68,14 +68,8 @@
 
     function updateGlobal ( key, value ) {
         global[key] = value;
-
-        if ( isInChat () ) {
-            extState.chat[key] = value;
-            extState.saveChat ();
-        } else {
-            extState.global[key] = value;
-            extState.saveGlobal ();
-        }
+        extState.global[key] = value;
+        extState.saveGlobal ();
     }
 
     let dtLocalStr = $derived ( () => {
