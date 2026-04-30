@@ -76,6 +76,7 @@ const defaultGlobalSettings = Object.freeze({
         { amount: 1, unit: 'h' },
         { amount: 1, unit: 'd' }
     ],
+    customAutoAdvance: [15, 30, 60, 120],
     showWidget: true,
     isEnabled: true,
     defaultChatSettings: structuredClone(defaultChatSettings)

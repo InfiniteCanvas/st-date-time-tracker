@@ -12,6 +12,9 @@
             { amount: 1, unit: 'd' }
         ];
     }
+    if ( !extState.global.customAutoAdvance ) {
+        extState.global.customAutoAdvance = [15, 30, 60, 120];
+    }
 
     let global = $state ( { ...extState.global } );
     let chat = $state ( { ...extState.chat } );
@@ -145,6 +148,25 @@
     function removeCustomAdjustment ( index ) {
         const newAdj = global.customAdjustments.filter ( ( _, i ) => i !== index );
         updateGlobal ( 'customAdjustments', newAdj );
+    }
+
+    // Custom Auto-Advance Presets
+    let newAutoAdv = $state ( 30 );
+
+    function addCustomAutoAdvance () {
+        if ( newAutoAdv > 0 && !global.customAutoAdvance.includes ( newAutoAdv ) ) {
+            const arr = [ ...global.customAutoAdvance, newAutoAdv ].sort ( ( a, b ) => a - b );
+            updateGlobal ( 'customAutoAdvance', arr );
+        }
+    }
+
+    function removeCustomAutoAdvance ( index ) {
+        const arr = global.customAutoAdvance.filter ( ( _, i ) => i !== index );
+        updateGlobal ( 'customAutoAdvance', arr );
+    }
+
+    function setAutoAdvance ( minutes ) {
+        updateChat ( 'autoAdvanceMinutes', minutes );
     }
 
     // Drag Logic
@@ -442,6 +464,55 @@
             {/each}
         </div>
     </div>
+
+    <div class="dt-divider"></div>
+
+    <!-- Auto-Advance Presets -->
+    <div class="dt-card">
+        <div class="dt-section-title">
+            <i class="fa-solid fa-forward" style="margin-right: 6px; font-size: 0.75em;"></i>
+            Auto-Advance Presets
+        </div>
+        <div class="dt-add-row">
+            <input bind:value={newAutoAdv}
+                   class="dt-input"
+                   min="1"
+                   placeholder="Minutes"
+                   style="flex: 1 1 auto; min-width: 0;"
+                   type="number"/>
+            <button class="dt-btn-brand" onclick={addCustomAutoAdvance}>Add</button>
+        </div>
+
+        <div class="dt-item-list">
+            {#each global.customAutoAdvance as mins, i}
+                <div class="dt-item-row">
+                    <div class="dt-item-info">
+                        <span class="dt-dot"></span>
+                        <span class="dt-item-label">{mins} min</span>
+                    </div>
+                    <div class="dt-item-actions">
+                        <button class="dt-item-btn"
+                                disabled={i === 0}
+                                onclick={() => moveItem('customAutoAdvance', i, -1)}
+                                title="Move up">
+                            <i class="fa-solid fa-arrow-up"></i>
+                        </button>
+                        <button class="dt-item-btn"
+                                disabled={i === global.customAutoAdvance.length - 1}
+                                onclick={() => moveItem('customAutoAdvance', i, 1)}
+                                title="Move down">
+                            <i class="fa-solid fa-arrow-down"></i>
+                        </button>
+                        <button class="dt-item-btn dt-item-btn-danger"
+                                onclick={() => removeCustomAutoAdvance(i)}
+                                title="Delete">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            {/each}
+        </div>
+    </div>
 </div>
 
 <!-- FLOATING WIDGET -->
@@ -503,6 +574,15 @@
                     min="0"
                 />
             </div>
+            {#if global.customAutoAdvance.length > 0}
+                <div class="dt-widget-grid" style="margin-top: 6px;">
+                    {#each global.customAutoAdvance as mins}
+                        <button class="dt-widget-btn"
+                                class:dt-widget-btn-active={chat.autoAdvanceMinutes === mins}
+                                onclick={() => setAutoAdvance(mins)}>{mins}m</button>
+                    {/each}
+                </div>
+            {/if}
         </div>
     </div>
 {/if}
@@ -915,6 +995,12 @@
     }
     .dt-widget-btn:active {
         transform: scale(0.96);
+    }
+    .dt-widget-btn-active {
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.65), rgba(99, 102, 241, 0.65)) !important;
+        border-color: rgba(99, 102, 241, 0.5) !important;
+        color: #fff !important;
+        box-shadow: 0 0 10px rgba(99, 102, 241, 0.35);
     }
 
     .dt-widget-adjust-list {
