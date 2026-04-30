@@ -27,7 +27,11 @@
         };
         const syncGlobal = () => {
             if ( isInChat () ) {
-                global = { ...extState.global, ...extState.chat };
+                const chatOnly = { ...extState.chat };
+                for ( const key of ['isEnabled', 'showWidget', 'customButtons', 'customAdjustments', 'defaultChatSettings'] ) {
+                    delete chatOnly[key];
+                }
+                global = { ...extState.global, ...chatOnly };
             } else {
                 global = { ...extState.global };
             }

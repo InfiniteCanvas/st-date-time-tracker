@@ -91,9 +91,8 @@ if (!window.extension_settings[MODULE_NAME]) {
     window.extension_settings[MODULE_NAME] = { ...defaultGlobalSettings };
 }
 
-// Export a reactive state object that Svelte can bind to and update
 export const extState = {
-    global: window.extension_settings[MODULE_NAME],
+    get global () { return window.extension_settings[MODULE_NAME]; },
     chat: { ...defaultChatSettings },
 
     // Helper to save global settings directly to ST's settings.json
@@ -120,6 +119,17 @@ function loadChatSettings() {
 
     if (metadata && metadata[MODULE_NAME]) {
         extState.chat = { ...globalDefaults, ...metadata[MODULE_NAME] };
+
+        let didMigrateChat = false;
+        for ( const key of ['isEnabled', 'showWidget', 'customButtons', 'customAdjustments', 'defaultChatSettings'] ) {
+            if ( extState.chat[key] !== undefined ) {
+                delete extState.chat[key];
+                didMigrateChat = true;
+            }
+        }
+        if ( didMigrateChat ) {
+            extState.saveChat();
+        }
 
         // Migration step: If a user has an older chat saved with just 'promptFormat',
         // split it into the two new dedicated formats so their chat doesn't break.
