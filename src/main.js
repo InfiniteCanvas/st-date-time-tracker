@@ -44,17 +44,12 @@ function stripTimeArtifacts(text) {
 // EXTENSION INITIALIZATION & STATE MANAGEMENT
 // --------------------------------------------------------------------------------------
 
-// 1. Defensively ensure the ST settings object exists before we touch it
-if (!window.extension_settings) {
-    window.extension_settings = {};
-}
-
-// 2. Safely mock ST prompt constants just in case they aren't available on the window yet
+// Safely mock ST prompt constants just in case they aren't available on the window yet
 const extension_prompt_types = window.extension_prompt_types || { NONE: -1, IN_PROMPT: 0, INCHAT: 1, BEFORE_PROMPT: 2 };
 const extension_prompt_roles = window.extension_prompt_roles || { SYSTEM: 0, USER: 1, ASSISTANT: 2 };
 
 // Chat Settings (Unique to each specific chat file)
-const defaultChatSettings = {
+const defaultChatSettings = Object.freeze({
     currentDateTime: new Date().toISOString(),
     autoAdvanceMinutes: 0,
     injectFormat: "[System Note - Current Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}. Do not generate timestamps or <time> tags in your responses. The system handles this automatically.]",
@@ -64,10 +59,10 @@ const defaultChatSettings = {
     injectRole: 0,     // 0 = System, 1 = User, 2 = Assistant
     appendToResponses: true,
     appendToUserMessages: false
-};
+});
 
 // Global Settings (Shared across all chats)
-const defaultGlobalSettings = {
+const defaultGlobalSettings = Object.freeze({
     customButtons: [
         { label: 'Dawn', hour: 6 },
         { label: 'Morning', hour: 9 },
@@ -83,30 +78,50 @@ const defaultGlobalSettings = {
     ],
     showWidget: true,
     isEnabled: true,
-    defaultChatSettings: { ...defaultChatSettings }
-};
+    defaultChatSettings: structuredClone(defaultChatSettings)
+});
 
-// Initialize our extension's slice of the global settings object
-if (!window.extension_settings[MODULE_NAME]) {
-    window.extension_settings[MODULE_NAME] = { ...defaultGlobalSettings };
+/**
+ * Get or initialize global settings using ST's official extensionSettings API.
+ * Ensures all default keys exist (helpful after extension updates).
+ */
+function getGlobalSettings() {
+    const { extensionSettings } = window.SillyTavern.getContext();
+
+    if (!extensionSettings[MODULE_NAME]) {
+        extensionSettings[MODULE_NAME] = structuredClone(defaultGlobalSettings);
+    }
+
+    // Ensure all default keys exist (handles extension updates that add new settings)
+    for (const key of Object.keys(defaultGlobalSettings)) {
+        if (!Object.hasOwn(extensionSettings[MODULE_NAME], key)) {
+            extensionSettings[MODULE_NAME][key] = structuredClone(defaultGlobalSettings[key]);
+        }
+    }
+
+    return extensionSettings[MODULE_NAME];
+}
+
+function saveGlobalSettings() {
+    const { saveSettingsDebounced } = window.SillyTavern.getContext();
+    saveSettingsDebounced();
+}
+
+function saveChatSettings() {
+    const { chatMetadata, saveMetadataDebounced } = window.SillyTavern.getContext();
+    if (chatMetadata) {
+        chatMetadata[MODULE_NAME] = { ...extState.chat };
+        saveMetadataDebounced();
+    }
 }
 
 // Export a reactive state object that Svelte can bind to and update
 export const extState = {
-    global: window.extension_settings[MODULE_NAME],
-    chat: { ...defaultChatSettings },
+    global: getGlobalSettings(),
+    chat: structuredClone(defaultChatSettings),
 
-    // Helper to save global settings directly to ST's settings.json
-    saveGlobal: () => window.SillyTavern.getContext().saveSettingsDebounced(),
-
-    // Helper to save chat settings directly to the current chat's JSON file (metadata)
-    saveChat: () => {
-        const metadata = window.SillyTavern.getContext().chatMetadata;
-        if (metadata) {
-            metadata[MODULE_NAME] = { ...extState.chat };
-            window.SillyTavern.getContext().saveMetadataDebounced();
-        }
-    },
+    saveGlobal: saveGlobalSettings,
+    saveChat: saveChatSettings,
     updatePrompt: () => refreshPrompt()
 };
 
@@ -115,22 +130,20 @@ export const extState = {
  * Fired automatically when ST loads a new character or chat file.
  */
 function loadChatSettings() {
-    const metadata = window.SillyTavern.getContext().chatMetadata;
-    const globalDefaults = extState.global.defaultChatSettings || defaultChatSettings;
+    const { chatMetadata } = window.SillyTavern.getContext();
+    const globalDefaults = extState.global.defaultChatSettings || structuredClone(defaultChatSettings);
 
-    if (metadata && metadata[MODULE_NAME]) {
-        extState.chat = { ...globalDefaults, ...metadata[MODULE_NAME] };
+    if (chatMetadata && chatMetadata[MODULE_NAME]) {
+        extState.chat = { ...globalDefaults, ...chatMetadata[MODULE_NAME] };
 
-        // Migration step: If a user has an older chat saved with just 'promptFormat',
-        // split it into the two new dedicated formats so their chat doesn't break.
         if (extState.chat.promptFormat) {
             extState.chat.injectFormat = extState.chat.promptFormat;
-            extState.chat.appendFormat = defaultChatSettings.appendFormat;
+            extState.chat.appendFormat = structuredClone(defaultChatSettings.appendFormat);
             delete extState.chat.promptFormat;
             extState.saveChat();
         }
     } else {
-        extState.chat = { ...globalDefaults };
+        extState.chat = structuredClone(globalDefaults);
     }
 
     // Apply the prompt to the backend and tell Svelte to redraw the UI

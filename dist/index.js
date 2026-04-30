@@ -2284,7 +2284,6 @@ function ci(e) {
 	}
 	return t;
 }
-window.extension_settings || (window.extension_settings = {});
 var li = window.extension_prompt_types || {
 	NONE: -1,
 	IN_PROMPT: 0,
@@ -2294,7 +2293,7 @@ var li = window.extension_prompt_types || {
 	SYSTEM: 0,
 	USER: 1,
 	ASSISTANT: 2
-}, di = {
+}, di = Object.freeze({
 	currentDateTime: new Date().toISOString(),
 	autoAdvanceMinutes: 0,
 	injectFormat: "[System Note - Current Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}. Do not generate timestamps or <time> tags in your responses. The system handles this automatically.]",
@@ -2304,7 +2303,7 @@ var li = window.extension_prompt_types || {
 	injectRole: 0,
 	appendToResponses: !0,
 	appendToUserMessages: !1
-}, fi = {
+}), fi = Object.freeze({
 	customButtons: [
 		{
 			label: "Dawn",
@@ -2347,27 +2346,37 @@ var li = window.extension_prompt_types || {
 	],
 	showWidget: !0,
 	isEnabled: !0,
-	defaultChatSettings: { ...di }
-};
-window.extension_settings[si] || (window.extension_settings[si] = { ...fi });
-const $ = {
-	global: window.extension_settings[si],
-	chat: { ...di },
-	saveGlobal: () => window.SillyTavern.getContext().saveSettingsDebounced(),
-	saveChat: () => {
-		let e = window.SillyTavern.getContext().chatMetadata;
-		e && (e[si] = { ...$.chat }, window.SillyTavern.getContext().saveMetadataDebounced());
-	},
-	updatePrompt: () => hi()
-};
+	defaultChatSettings: structuredClone(di)
+});
 function pi() {
-	let e = window.SillyTavern.getContext().chatMetadata, t = $.global.defaultChatSettings || di;
+	let { extensionSettings: e } = window.SillyTavern.getContext();
+	e[si] || (e[si] = structuredClone(fi));
+	for (let t of Object.keys(fi)) Object.hasOwn(e[si], t) || (e[si][t] = structuredClone(fi[t]));
+	return e[si];
+}
+function mi() {
+	let { saveSettingsDebounced: e } = window.SillyTavern.getContext();
+	e();
+}
+function hi() {
+	let { chatMetadata: e, saveMetadataDebounced: t } = window.SillyTavern.getContext();
+	e && (e[si] = { ...$.chat }, t());
+}
+const $ = {
+	global: pi(),
+	chat: structuredClone(di),
+	saveGlobal: mi,
+	saveChat: hi,
+	updatePrompt: () => vi()
+};
+function gi() {
+	let { chatMetadata: e } = window.SillyTavern.getContext(), t = $.global.defaultChatSettings || structuredClone(di);
 	e && e[si] ? ($.chat = {
 		...t,
 		...e[si]
-	}, $.chat.promptFormat && ($.chat.injectFormat = $.chat.promptFormat, $.chat.appendFormat = di.appendFormat, delete $.chat.promptFormat, $.saveChat())) : $.chat = { ...t }, hi(), window.dispatchEvent(new CustomEvent("st-dt-chat-loaded"));
+	}, $.chat.promptFormat && ($.chat.injectFormat = $.chat.promptFormat, $.chat.appendFormat = structuredClone(di.appendFormat), delete $.chat.promptFormat, $.saveChat())) : $.chat = structuredClone(t), vi(), window.dispatchEvent(new CustomEvent("st-dt-chat-loaded"));
 }
-function mi(e) {
+function _i(e) {
 	if (!e) return "";
 	let t = new Date($.chat.currentDateTime);
 	if (isNaN(t.getTime())) return "";
@@ -2384,14 +2393,14 @@ function mi(e) {
 	for (let [e, t] of Object.entries(r)) n = n.replaceAll(e, t);
 	return n;
 }
-function hi() {
+function vi() {
 	let { setExtensionPrompt: e } = window.SillyTavern.getContext();
 	if (!$.global.isEnabled || typeof e != "function") return;
 	if ($.chat.injectPosition === 0) {
 		e(si, "", li.NONE, 0, !1, 0);
 		return;
 	}
-	let t = mi($.chat.injectFormat), n = li.NONE;
+	let t = _i($.chat.injectFormat), n = li.NONE;
 	$.chat.injectPosition === 1 && (n = li.BEFORE_PROMPT), $.chat.injectPosition === 2 && (n = li.IN_PROMPT), $.chat.injectPosition === 3 && (n = li.INCHAT);
 	let r = ui.SYSTEM;
 	$.chat.injectRole === 1 && (r = ui.USER), $.chat.injectRole === 2 && (r = ui.ASSISTANT);
@@ -2414,7 +2423,7 @@ window.jQuery(async (e) => {
 		$.global.showWidget = !$.global.showWidget, $.saveGlobal(), window.dispatchEvent(new CustomEvent("st-dt-widget-toggled"));
 	});
 	let t = window.SillyTavern.getContext();
-	t.eventSource.on(t.event_types.CHAT_LOADED, pi), t.eventSource.on(t.event_types.MESSAGE_RECEIVED, (e) => {
+	t.eventSource.on(t.event_types.CHAT_LOADED, gi), t.eventSource.on(t.event_types.MESSAGE_RECEIVED, (e) => {
 		if (!$.global.isEnabled) return;
 		let n = typeof e == "number" && e >= 0;
 		if (n && $.chat.autoAdvanceMinutes > 0) {
@@ -2423,7 +2432,7 @@ window.jQuery(async (e) => {
 		}
 		let r = t.chat, i = r[r.length - 1];
 		if (i && i.is_user === !1 && (i.mes = ci(i.mes), n && $.chat.appendToResponses !== !1)) {
-			let e = mi($.chat.appendFormat);
+			let e = _i($.chat.appendFormat);
 			e && (i.mes += `\n<time>${e}</time>`, window.SillyTavern.getContext().saveChat());
 		}
 	}), t.eventSource.on(t.event_types.MESSAGE_SENT, () => {
@@ -2435,9 +2444,9 @@ window.jQuery(async (e) => {
 		if ($.chat.appendToUserMessages !== !0) return;
 		let e = t.chat, n = e[e.length - 1];
 		if (n && n.is_user === !0) {
-			let e = mi($.chat.appendFormat);
+			let e = _i($.chat.appendFormat);
 			e && (n.mes += `\n<time>${e}</time>`, window.SillyTavern.getContext().saveChat());
 		}
-	}), pi();
+	}), gi();
 });
 export { $ as extState };
