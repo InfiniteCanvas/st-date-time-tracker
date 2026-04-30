@@ -191,14 +191,12 @@
 
     <div class="dt-card">
         <!-- Enable Extension Toggle -->
-        <label class="dt-toggle-row">
+        <label class="dt-toggle">
+            <input checked={global.isEnabled}
+                   onchange={(e) => updateGlobal('isEnabled', e.target.checked)}
+                   type="checkbox"/>
+            <span class="dt-toggle-slider"></span>
             <span class="dt-toggle-label">Enable Extension</span>
-            <label class="dt-toggle">
-                <input checked={global.isEnabled}
-                       onchange={(e) => updateGlobal('isEnabled', e.target.checked)}
-                       type="checkbox"/>
-                <span class="dt-toggle-slider"></span>
-            </label>
         </label>
 
         <!-- Current Date & Time -->
@@ -251,27 +249,23 @@
         <!-- Append to Messages -->
         <div class="dt-section">
             <div class="dt-section-title">Append to Messages</div>
-            <label class="dt-toggle-row">
+            <label class="dt-toggle">
+                <input
+                    checked={chat.appendToResponses !== false}
+                    onchange={(e) => updateChat('appendToResponses', e.target.checked)}
+                    type="checkbox"
+                />
+                <span class="dt-toggle-slider"></span>
                 <span class="dt-toggle-label">Append to AI responses</span>
-                <label class="dt-toggle">
-                    <input
-                        checked={chat.appendToResponses !== false}
-                        onchange={(e) => updateChat('appendToResponses', e.target.checked)}
-                        type="checkbox"
-                    />
-                    <span class="dt-toggle-slider"></span>
-                </label>
             </label>
-            <label class="dt-toggle-row">
+            <label class="dt-toggle">
+                <input
+                    checked={chat.appendToUserMessages === true}
+                    onchange={(e) => updateChat('appendToUserMessages', e.target.checked)}
+                    type="checkbox"
+                />
+                <span class="dt-toggle-slider"></span>
                 <span class="dt-toggle-label">Append to user messages</span>
-                <label class="dt-toggle">
-                    <input
-                        checked={chat.appendToUserMessages === true}
-                        onchange={(e) => updateChat('appendToUserMessages', e.target.checked)}
-                        type="checkbox"
-                    />
-                    <span class="dt-toggle-slider"></span>
-                </label>
             </label>
         </div>
     </div>
@@ -573,24 +567,12 @@
     }
 
     /* ===== TOGGLE ===== */
-    .dt-toggle-row {
+    .dt-toggle {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        padding: 4px 0;
-    }
-    .dt-toggle-label {
-        font-weight: 500;
-        font-size: 0.85rem;
-    }
-    .dt-toggle {
-        position: relative;
-        display: inline-block;
-        width: 40px;
-        height: 22px;
-        flex-shrink: 0;
+        gap: 10px;
         cursor: pointer;
+        padding: 4px 0;
     }
     .dt-toggle input {
         opacity: 0;
@@ -599,31 +581,39 @@
         position: absolute;
     }
     .dt-toggle-slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(255, 255, 255, 0.12);
-        border-radius: 22px;
-        transition: background 0.25s, box-shadow 0.25s;
+        position: relative;
+        width: 42px;
+        height: 22px;
+        background: var(--SmartThemeBorderColor, #555);
+        border-radius: 11px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        flex-shrink: 0;
     }
     .dt-toggle-slider::before {
         content: '';
         position: absolute;
-        height: 16px;
         width: 16px;
+        height: 16px;
         left: 3px;
-        bottom: 3px;
+        top: 3px;
         background: #fff;
         border-radius: 50%;
-        transition: transform 0.25s, box-shadow 0.25s;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     }
     .dt-toggle input:checked + .dt-toggle-slider {
         background: linear-gradient(135deg, #06b6d4, #6366f1);
         box-shadow: 0 0 10px rgba(99, 102, 241, 0.35);
     }
     .dt-toggle input:checked + .dt-toggle-slider::before {
-        transform: translateX(18px);
-        box-shadow: 0 0 6px rgba(6, 182, 212, 0.5);
+        transform: translateX(20px);
+    }
+    .dt-toggle input:focus + .dt-toggle-slider {
+        box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+    }
+    .dt-toggle-label {
+        font-weight: 500;
+        font-size: 0.85rem;
     }
 
     /* ===== SECTIONS ===== */
