@@ -53,6 +53,19 @@ if (!window.extension_settings) {
 const extension_prompt_types = window.extension_prompt_types || { NONE: -1, IN_PROMPT: 0, INCHAT: 1, BEFORE_PROMPT: 2 };
 const extension_prompt_roles = window.extension_prompt_roles || { SYSTEM: 0, USER: 1, ASSISTANT: 2 };
 
+// Chat Settings (Unique to each specific chat file)
+const defaultChatSettings = {
+    currentDateTime: new Date().toISOString(),
+    autoAdvanceMinutes: 0,
+    injectFormat: "[System Note - Current Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}. Do not generate timestamps or <time> tags in your responses. The system handles this automatically.]",
+    appendFormat: "Current Date and Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}",
+    injectPosition: 3, // 0 = None, 1 = Before Main, 2 = In Prompt, 3 = In Chat
+    injectDepth: 2,
+    injectRole: 0,     // 0 = System, 1 = User, 2 = Assistant
+    appendToResponses: true,
+    appendToUserMessages: false
+};
+
 // Global Settings (Shared across all chats)
 const defaultGlobalSettings = {
     customButtons: [
@@ -69,20 +82,8 @@ const defaultGlobalSettings = {
         { amount: 1, unit: 'd' }
     ],
     showWidget: true,
-    isEnabled: true
-};
-
-// Chat Settings (Unique to each specific chat file)
-const defaultChatSettings = {
-    currentDateTime: new Date().toISOString(),
-    autoAdvanceMinutes: 0,
-    injectFormat: "[System Note - Current Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}. Do not generate timestamps or <time> tags in your responses. The system handles this automatically.]",
-    appendFormat: "Current Date and Time: {{day}}, {{month}} {{date}}, {{year}}, {{time}}",
-    injectPosition: 3, // 0 = None, 1 = Before Main, 2 = In Prompt, 3 = In Chat
-    injectDepth: 2,
-    injectRole: 0,     // 0 = System, 1 = User, 2 = Assistant
-    appendToResponses: true,
-    appendToUserMessages: false
+    isEnabled: true,
+    defaultChatSettings: { ...defaultChatSettings }
 };
 
 // Initialize our extension's slice of the global settings object
@@ -115,8 +116,10 @@ export const extState = {
  */
 function loadChatSettings() {
     const metadata = window.SillyTavern.getContext().chatMetadata;
+    const globalDefaults = extState.global.defaultChatSettings || defaultChatSettings;
+
     if (metadata && metadata[MODULE_NAME]) {
-        extState.chat = { ...defaultChatSettings, ...metadata[MODULE_NAME] };
+        extState.chat = { ...globalDefaults, ...metadata[MODULE_NAME] };
 
         // Migration step: If a user has an older chat saved with just 'promptFormat',
         // split it into the two new dedicated formats so their chat doesn't break.
@@ -127,8 +130,7 @@ function loadChatSettings() {
             extState.saveChat();
         }
     } else {
-        // If it's a brand new chat, fall back to default settings
-        extState.chat = { ...defaultChatSettings };
+        extState.chat = { ...globalDefaults };
     }
 
     // Apply the prompt to the backend and tell Svelte to redraw the UI

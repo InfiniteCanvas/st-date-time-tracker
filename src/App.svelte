@@ -16,19 +16,36 @@
     let global = $state ( { ...extState.global } );
     let chat = $state ( { ...extState.chat } );
 
+    function isInChat () {
+        const ctx = window.SillyTavern.getContext ();
+        return ctx.characterId !== undefined || ctx.groupId !== null;
+    }
+
     onMount ( () => {
         const syncChat = () => {
             chat = { ...extState.chat };
         };
         const syncGlobal = () => {
-            global = { ...extState.global };
+            if ( isInChat () ) {
+                global = { ...extState.global, ...extState.chat };
+            } else {
+                global = { ...extState.global };
+            }
         };
 
-        window.addEventListener ( 'st-dt-chat-loaded', syncChat );
+        syncChat ();
+        syncGlobal ();
+
+        const handleChatLoaded = () => {
+            syncChat ();
+            syncGlobal ();
+        };
+
+        window.addEventListener ( 'st-dt-chat-loaded', handleChatLoaded );
         window.addEventListener ( 'st-dt-widget-toggled', syncGlobal );
 
         return () => {
-            window.removeEventListener ( 'st-dt-chat-loaded', syncChat );
+            window.removeEventListener ( 'st-dt-chat-loaded', handleChatLoaded );
             window.removeEventListener ( 'st-dt-widget-toggled', syncGlobal );
         };
     } );
@@ -36,14 +53,29 @@
     function updateChat ( key, value ) {
         chat[key] = value;
         extState.chat[key] = value;
-        extState.saveChat ();
+
+        if ( isInChat () ) {
+            extState.saveChat ();
+        } else {
+            if ( !extState.global.defaultChatSettings ) {
+                extState.global.defaultChatSettings = {};
+            }
+            extState.global.defaultChatSettings[key] = value;
+            extState.saveGlobal ();
+        }
         extState.updatePrompt ();
     }
 
     function updateGlobal ( key, value ) {
         global[key] = value;
-        extState.global[key] = value;
-        extState.saveGlobal ();
+
+        if ( isInChat () ) {
+            extState.chat[key] = value;
+            extState.saveChat ();
+        } else {
+            extState.global[key] = value;
+            extState.saveGlobal ();
+        }
     }
 
     let dtLocalStr = $derived ( () => {
